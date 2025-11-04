@@ -65,7 +65,7 @@ class OnboardingScreen1 extends StatelessWidget {
           children: [
             //image
             Expanded(
-              flex: 4,
+              flex: 5,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(color: Colors.grey),
@@ -77,7 +77,7 @@ class OnboardingScreen1 extends StatelessWidget {
             ),
             //text
             Expanded(
-              flex: 6,
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
@@ -146,7 +146,7 @@ class OnboardingScreen2 extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              flex: 4,
+              flex: 5,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(color: Colors.grey),
@@ -157,7 +157,7 @@ class OnboardingScreen2 extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
@@ -230,7 +230,7 @@ class OnboardingScreen3 extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              flex: 4,
+              flex: 6,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(color: Colors.grey),
@@ -241,7 +241,7 @@ class OnboardingScreen3 extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: 4,
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
@@ -311,7 +311,7 @@ class OnboardingScreen4 extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              flex: 4,
+              flex: 5,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(color: Colors.grey),
@@ -322,7 +322,7 @@ class OnboardingScreen4 extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
