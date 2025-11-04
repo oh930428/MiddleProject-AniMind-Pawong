@@ -26,7 +26,7 @@ class HomeShell extends StatelessWidget {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: '프로필'),
+          BottomNavigationBarItem(icon: Icon(Icons.pets), label: '프로필'),
         ],
       ),
     );
