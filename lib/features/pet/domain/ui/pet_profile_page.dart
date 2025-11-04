@@ -5,6 +5,9 @@ class PetProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(title: Text("반려동물 프로필")),
+      body: SafeArea(child: Center(child: Text("반려동물 프로필"))),
+    );
   }
 }
