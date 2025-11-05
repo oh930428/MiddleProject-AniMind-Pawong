@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'home_shell.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,11 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/onboarding/domain//ui/onboarding_page.dart';
 
 import '../../features/auth/domain/ui/social_login_page.dart';
-import '../../features/home/domain/ui/home_page.dart';
-import '../../features/pet/domain/ui/pet_profile_page.dart';
-
 // viewmodel
 import '../../features/auth/domain/viewmodel/auth_view_model.dart';
+import '../../features/home/domain/ui/home_page.dart';
+import '../../features/pet/domain/ui/pet_profile_page.dart';
+import 'home_shell.dart';
 
 GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
@@ -47,7 +46,10 @@ GoRouter createRouter(BuildContext context) {
         builder: (context, state, child) => HomeShell(child: child),
         routes: [
           GoRoute(path: '/home', builder: (_, __) => const HomePage()),
-          GoRoute(path: '/profile', builder: (_, __) => const PetProfilePage()),
+          GoRoute(
+            path: '/profile',
+            builder: (_, __) => const PetProfileScreen(),
+          ),
         ],
       ),
     ],

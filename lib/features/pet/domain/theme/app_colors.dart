@@ -1,8 +1,7 @@
-// lib/design/tokens.dart
 import 'package:flutter/material.dart';
 
 // --------------------------------------------------------------------------
-// 1. 색상 토큰 (Color Tokens) - 이미지에 맞춰 청록색 계열로 변경
+// 1. 색상 토큰 (청록색 계열로 변경 예정)
 // --------------------------------------------------------------------------
 
 class AppColors {
@@ -71,6 +70,7 @@ class AppTextStyles {
 
 class AppLayout {
   static const double horizontalPadding = 16.0;
+  static const double verticalPadding = 16.0;
   static const double sectionSpacing = 24.0;
   static const double elementSpacing = 12.0;
   static const double iconTextSpacing = 8.0;
