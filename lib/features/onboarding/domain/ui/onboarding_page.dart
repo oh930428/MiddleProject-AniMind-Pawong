@@ -1,42 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _checkOnboardingStatus();
-  }
-
-  void _checkOnboardingStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final doneOnboarding = prefs.getBool('onboarding_status') ?? false;
-
-    if (doneOnboarding) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const OnboardingScreen4()),
-      );
-    } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const OnboardingScreen1()),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold();
-  }
-}
-
-class OnboardingScreen1 extends StatelessWidget {
-  const OnboardingScreen1({super.key});
+class OnboardingPage extends StatelessWidget {
+  const OnboardingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -90,11 +57,7 @@ class OnboardingScreen1 extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const OnboardingScreen2(),
-                      ),
-                    );
+                    context.go('/onboarding2');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -117,8 +80,8 @@ class OnboardingScreen1 extends StatelessWidget {
   }
 }
 
-class OnboardingScreen2 extends StatelessWidget {
-  const OnboardingScreen2({super.key});
+class OnboardingPage2 extends StatelessWidget {
+  const OnboardingPage2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -169,11 +132,7 @@ class OnboardingScreen2 extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const OnboardingScreen3(),
-                      ),
-                    );
+                    context.go('/onboarding3');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -196,13 +155,8 @@ class OnboardingScreen2 extends StatelessWidget {
   }
 }
 
-class OnboardingScreen3 extends StatelessWidget {
-  const OnboardingScreen3({super.key});
-
-  Future<void> _saveOnboardingStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_status', true);
-  }
+class OnboardingPage3 extends StatelessWidget {
+  const OnboardingPage3({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +192,7 @@ class OnboardingScreen3 extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '3번째 온보딩 화면입니다.\n다음을 누르세요',
+                      '3번째 온보딩 화면입니다.\n다음을 누르세요.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
@@ -253,13 +207,7 @@ class OnboardingScreen3 extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    _saveOnboardingStatus();
-
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const OnboardingScreen4(),
-                      ),
-                    );
+                    context.go('/onboarding4');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -282,8 +230,13 @@ class OnboardingScreen3 extends StatelessWidget {
   }
 }
 
-class OnboardingScreen4 extends StatelessWidget {
-  const OnboardingScreen4({super.key});
+class OnboardingPage4 extends StatelessWidget {
+  const OnboardingPage4({super.key});
+
+  Future<void> _saveOnboardingStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_status', true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +263,7 @@ class OnboardingScreen4 extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      '시작해볼까요?',
+                      '시작해볼까요',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 28,
@@ -319,7 +272,7 @@ class OnboardingScreen4 extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '4번 온보딩 화면입니다.\n로그인하거나 회원가입하세요.',
+                      '4번째 온보딩 화면입니다.\n시작하기를 누르세요',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
@@ -329,56 +282,27 @@ class OnboardingScreen4 extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        //loginbutton
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        '로그인',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _saveOnboardingStatus();
+
+                    context.go('/login');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        //registerbutton
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        '회원가입',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  child: const Text(
+                    '시작하기',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                ],
+                ),
               ),
             ),
           ],
