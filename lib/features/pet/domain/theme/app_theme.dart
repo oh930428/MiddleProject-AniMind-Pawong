@@ -1,4 +1,3 @@
-// lib/theme/app_theme.dart
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
@@ -44,15 +43,6 @@ class AppTheme {
           color: colorScheme.onSurface,
         ),
       ),
-      // cardTheme: CardTheme(
-      //   color: colorScheme.surface,
-      //   elevation: 0,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(AppLayout.cardRadius),
-      //     side: const BorderSide(color: AppColors.border, width: 1),
-      //   ),
-      // ),
-      // 최소 터치 영역 48x48을 위한 설정 (대부분의 위젯에 영향을 줌)
       materialTapTargetSize: MaterialTapTargetSize.padded,
       // 접근성 강화를 위한 IconTheme
       iconButtonTheme: IconButtonThemeData(
@@ -77,10 +67,9 @@ class AppTheme {
   static ThemeData get darkTheme {
     const ColorScheme colorScheme = ColorScheme(
       brightness: Brightness.dark,
-      primary: AppColors.primary, // Primary color kept
+      primary: AppColors.primary,
       onPrimary: AppColors.darkSurface,
-      primaryContainer: AppColors
-          .primary, // Use primary for container in dark mode for contrast
+      primaryContainer: AppColors.primary,
       onPrimaryContainer: AppColors.darkTextPrimary,
       secondary: AppColors.primary,
       onSecondary: AppColors.darkSurface,
@@ -111,14 +100,6 @@ class AppTheme {
           color: colorScheme.onSurface,
         ),
       ),
-      // cardTheme: CardTheme(
-      //   color: colorScheme.surface,
-      //   elevation: 0,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(AppLayout.cardRadius),
-      //     side: BorderSide(color: colorScheme.outline, width: 1),
-      //   ),
-      // ),
       materialTapTargetSize: MaterialTapTargetSize.padded,
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
