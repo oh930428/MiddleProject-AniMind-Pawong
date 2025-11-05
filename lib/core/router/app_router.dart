@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 // ui
+import '../../features/onboarding/domain//ui/onboarding_page.dart';
+
 import '../../features/auth/domain/ui/social_login_page.dart';
 // viewmodel
 import '../../features/auth/domain/viewmodel/auth_view_model.dart';
@@ -14,9 +18,26 @@ GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
 
   return GoRouter(
-    initialLocation: '/login',
+    //initialLocation: '/login',
     refreshListenable: authViewModel,
     routes: [
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingPage(),
+      ),
+      GoRoute(
+        path: '/onboarding2',
+        builder: (context, state) => const OnboardingPage2(),
+      ),
+      GoRoute(
+        path: '/onboarding3',
+        builder: (context, state) => const OnboardingPage3(),
+      ),
+      GoRoute(
+        path: '/onboarding4',
+        builder: (context, state) => const OnboardingPage4(),
+      ),
+
       GoRoute(
         path: '/login',
         builder: (context, state) => const SocialLoginPage(),
@@ -32,7 +53,17 @@ GoRouter createRouter(BuildContext context) {
         ],
       ),
     ],
-    redirect: (context, state) {
+    redirect: (context, state) async {
+      final prefs = await SharedPreferences.getInstance();
+      final doneOnboarding = prefs.getBool('onboarding_status') ?? false;
+      final isOnboardingRoute = state.matchedLocation.startsWith('/onboarding');
+      if (isOnboardingRoute) {
+        return null;
+      }
+      if (!doneOnboarding && !isOnboardingRoute) {
+        return '/onboarding';
+      }
+
       final isLoggedIn = authViewModel.userId != null;
       final loggingIn = state.matchedLocation == '/login';
 
