@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
-// ui
-import '../../features/onboarding/domain//ui/onboarding_first_page.dart';
-import '../../features/onboarding/domain//ui/onboarding_second_page.dart';
-import '../../features/onboarding/domain//ui/onboarding_third_page.dart';
-import '../../features/onboarding/domain//ui/onboarding_fourth_page.dart';
 
 import '../../features/auth/domain/ui/social_login_page.dart';
 // viewmodel
 import '../../features/auth/domain/viewmodel/auth_view_model.dart';
 import '../../features/home/domain/ui/home_page.dart';
+// ui
+import '../../features/onboarding/domain//ui/onboarding_first_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_fourth_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_second_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_third_page.dart';
 import '../../features/pet/domain/ui/pet_profile_page.dart';
 import 'home_shell.dart';
 
@@ -21,7 +19,7 @@ GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
 
   return GoRouter(
-    //initialLocation: '/login',
+    initialLocation: '/home',
     refreshListenable: authViewModel,
     routes: [
       GoRoute(
