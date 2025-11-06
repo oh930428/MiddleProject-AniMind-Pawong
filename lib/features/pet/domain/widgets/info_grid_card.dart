@@ -13,7 +13,7 @@ class InfoGridCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: AppLayout.horizontalPadding,
-      ),
+      ).copyWith(bottom: 2),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: PetColors.cardBackground,
@@ -25,7 +25,7 @@ class InfoGridCard extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 3.5,
+          childAspectRatio: 3.0,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
