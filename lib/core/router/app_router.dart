@@ -5,7 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ui
-import '../../features/onboarding/domain//ui/onboarding_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_first_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_second_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_third_page.dart';
+import '../../features/onboarding/domain//ui/onboarding_fourth_page.dart';
 
 import '../../features/auth/domain/ui/social_login_page.dart';
 // viewmodel
@@ -22,20 +25,20 @@ GoRouter createRouter(BuildContext context) {
     refreshListenable: authViewModel,
     routes: [
       GoRoute(
-        path: '/onboarding',
-        builder: (context, state) => const OnboardingPage(),
+        path: '/onboarding1',
+        builder: (context, state) => const OnboardingFirstPage(),
       ),
       GoRoute(
         path: '/onboarding2',
-        builder: (context, state) => const OnboardingPage2(),
+        builder: (context, state) => const OnboardingSecondPage(),
       ),
       GoRoute(
         path: '/onboarding3',
-        builder: (context, state) => const OnboardingPage3(),
+        builder: (context, state) => const OnboardingThirdPage(),
       ),
       GoRoute(
         path: '/onboarding4',
-        builder: (context, state) => const OnboardingPage4(),
+        builder: (context, state) => const OnboardingFourthPage(),
       ),
 
       GoRoute(
@@ -61,7 +64,7 @@ GoRouter createRouter(BuildContext context) {
         return null;
       }
       if (!doneOnboarding && !isOnboardingRoute) {
-        return '/onboarding';
+        return '/onboarding1';
       }
 
       final isLoggedIn = authViewModel.userId != null;
