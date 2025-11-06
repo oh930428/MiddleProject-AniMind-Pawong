@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
     final router = createRouter(context);
 
     return MaterialApp.router(
-      title: 'AniMind',
+      title: 'Animind',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
     );

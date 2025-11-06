@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/pet_profile_page.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/ui/utils.dart';
+
+import '../entities/pet_data.dart';
 
 class HospitalRecordScreen extends StatefulWidget {
   final Pet pet;
@@ -19,7 +21,7 @@ class _HospitalRecordScreenState extends State<HospitalRecordScreen> {
   @override
   void initState() {
     super.initState();
-    _records = _repo.getHospitalRecords(widget.pet.id).cast<HospitalRecord>();
+    _records = _repo.getHospitalRecords(widget.pet.id);
   }
 
   void _addOrEditRecord([HospitalRecord? record]) async {
@@ -35,11 +37,9 @@ class _HospitalRecordScreenState extends State<HospitalRecordScreen> {
           _repo.addHospitalRecord(widget.pet.id, result);
         } else {
           // Edit
-          _repo.updateHospitalRecord(widget.pet.id, result as HospitalRecord);
+          _repo.updateHospitalRecord(widget.pet.id, result);
         }
-        _records = _repo
-            .getHospitalRecords(widget.pet.id)
-            .cast<HospitalRecord>();
+        _records = _repo.getHospitalRecords(widget.pet.id);
       });
     }
   }
