@@ -1,4 +1,4 @@
-import 'dart:io'; // 추가
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/ui/utils.dart';
@@ -42,10 +42,8 @@ class ProfileCard extends StatelessWidget {
           CircleAvatar(
             radius: 45,
             backgroundColor: PetColors.lightGrey,
-            backgroundImage: backgroundImage, // 변경
-            child:
-                backgroundImage ==
-                    null // 변경
+            backgroundImage: backgroundImage,
+            child: backgroundImage == null
                 ? const Icon(Icons.pets, size: 40, color: Colors.grey)
                 : null,
           ),

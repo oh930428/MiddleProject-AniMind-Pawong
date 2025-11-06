@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/hospital_record_page.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/ui/hospital_record_screen.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/ui/pet_edit_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/setting_page.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/ui/setting_screen.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/ui/utils.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/widgets/hospital_record_item.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/widgets/info_grid_card.dart';

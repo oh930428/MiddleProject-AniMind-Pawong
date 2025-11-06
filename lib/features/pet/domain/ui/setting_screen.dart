@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/theme/app_colors.dart';
+import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 
 // 설정 화면 위젯
 class SettingsScreen extends StatelessWidget {
@@ -49,10 +49,10 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  'user@kakao.com',
+                  'user@google.com',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
-                subtitle: Text('카카오 로그인'),
+                subtitle: Text('구글 로그인'),
               ),
             ),
             const SizedBox(height: AppLayout.sectionSpacing),
