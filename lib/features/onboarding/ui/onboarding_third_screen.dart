@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class OnboardingThirdPage extends StatelessWidget {
-  const OnboardingThirdPage({super.key});
+class OnboardingThirdScreen extends StatelessWidget {
+  const OnboardingThirdScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("반려동물의 병원 기록 홍보")),
       body: SafeArea(
         child: Column(
           children: [
@@ -53,7 +54,7 @@ class OnboardingThirdPage extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.go('/onboarding4');
+                    context.push('/onboarding4');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
