@@ -22,11 +22,18 @@ class HomeShell extends StatelessWidget {
             case 1:
               context.go('/profile');
               break;
+            case 2:
+              context.go('/faq');
+              break;
           }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: '프로필'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.question_mark),
+            label: 'faq',
+          ),
         ],
       ),
     );

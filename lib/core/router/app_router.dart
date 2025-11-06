@@ -16,6 +16,7 @@ import '../../features/auth/domain/ui/social_login_page.dart';
 import '../../features/auth/domain/viewmodel/auth_view_model.dart';
 import '../../features/home/domain/ui/home_page.dart';
 import '../../features/pet/domain/ui/pet_profile_page.dart';
+import '../../features/faq/domain/ui/faq.dart';
 import 'home_shell.dart';
 
 GoRouter createRouter(BuildContext context) {
@@ -57,6 +58,7 @@ GoRouter createRouter(BuildContext context) {
             path: '/profile',
             builder: (_, __) => const PetProfileScreen(),
           ),
+          GoRoute(path: '/faq', builder: (_, __) => const FAQPage()),
         ],
       ),
     ],
