@@ -55,6 +55,7 @@ GoRouter createRouter(BuildContext context) {
             path: '/profile',
             builder: (_, __) => const PetProfileScreen(),
           ),
+          GoRoute(path: '/faq', builder: (_, __) => const FAQPage()),
         ],
       ),
     ],
