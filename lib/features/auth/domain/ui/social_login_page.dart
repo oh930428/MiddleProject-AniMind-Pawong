@@ -92,7 +92,7 @@ class GoogleLoginButton extends StatelessWidget {
         : ElevatedButton(
             onPressed: isLoading
                 ? null
-                : context.read<AuthViewModel>().signInWithGoogle,
+                : context.read<AuthViewModel>().loginWithGoogle,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFFFFFF),
               shape: RoundedRectangleBorder(
@@ -116,7 +116,7 @@ class GoogleLoginButton extends StatelessWidget {
                     style: TextStyle(
                       color: Color(0xFF263938),
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],

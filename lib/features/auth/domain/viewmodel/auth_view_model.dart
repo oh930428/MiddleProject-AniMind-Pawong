@@ -7,6 +7,8 @@ final supabase = Supabase.instance.client;
 
 class AuthViewModel extends ChangeNotifier {
   String? userId;
+  String? userEmail;
+
   bool isLoading = false;
 
   AuthViewModel() {
@@ -16,15 +18,18 @@ class AuthViewModel extends ChangeNotifier {
   void _listenAuthState() {
     supabase.auth.onAuthStateChange.listen((data) {
       final newUserId = data.session?.user.id;
+      final newUserEmail = data.session?.user.email;
+
       if (newUserId != userId) {
         userId = newUserId;
+        userEmail = newUserEmail;
         notifyListeners();
       }
     });
   }
 
   // 구글 로그인
-  Future<void> signInWithGoogle() async {
+  Future<void> loginWithGoogle() async {
     try {
       isLoading = true;
       notifyListeners();
@@ -37,7 +42,7 @@ class AuthViewModel extends ChangeNotifier {
         clientId: dotenv.get("GOOGLE_ANDROID_CLIENT_ID"),
       );
       final googleUser = await googleSignIn.attemptLightweightAuthentication();
-
+      print("user: $googleUser");
       if (googleUser == null) {
         throw AuthException('Failed to sign in with Google.');
       }
@@ -71,13 +76,13 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // 로그아웃
-  Future<void> signOut() async {
+  Future<void> logOut() async {
     try {
       isLoading = true;
       notifyListeners();
 
-      await supabase.auth.signOut();
-      await GoogleSignIn.instance.signOut();
+      await supabase.auth.signOut(); // 수파베이스
+      await GoogleSignIn.instance.signOut(); // 구글 로그인 해당
       userId = null;
     } catch (error) {
       debugPrint("로그아웃 실패: $error");
