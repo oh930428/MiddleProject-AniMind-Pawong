@@ -1,80 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/features/auth/domain/ui/signup_page.dart';
-import 'package:middleproject_animind_pawong/features/pet/ui/pet_profile_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../features/auth/domain/ui/social_login_page.dart';
-// viewmodel
-import '../../features/auth/domain/viewmodel/auth_view_model.dart';
-import '../../features/home/domain/ui/home_page.dart';
-// ui
-import '../../features/onboarding/domain//ui/onboarding_first_page.dart';
-import '../../features/onboarding/domain//ui/onboarding_fourth_page.dart';
-import '../../features/onboarding/domain//ui/onboarding_second_page.dart';
-import '../../features/onboarding/domain//ui/onboarding_third_page.dart';
+// ViewModel
+import '../../features/auth/domain/viewmodel/auth_viewmodel.dart';
+import '../../features/auth/ui/signup_screen.dart';
+import '../../features/auth/ui/social_login_screen.dart';
+// import '../../features/pet/ui/pet_profile_screen.dart';
+import '../../features/faq/ui/faq_screen.dart';
+import '../../features/home/ui/home_screen.dart';
+import '../../features/onboarding/ui/onboarding_first_screen.dart';
+import '../../features/onboarding/ui/onboarding_fourth_screen.dart';
+import '../../features/onboarding/ui/onboarding_second_screen.dart';
+import '../../features/onboarding/ui/onboarding_third_screen.dart';
+// UI
+import '../../features/splash/ui/splash_screen.dart';
 import 'home_shell.dart';
 
 GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/splash',
     refreshListenable: authViewModel,
     routes: [
+      // 스플래시
+      GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
+
+      // 온보딩
       GoRoute(
         path: '/onboarding1',
-        builder: (context, state) => const OnboardingFirstPage(),
+        builder: (_, __) => const OnboardingFirstScreen(),
       ),
       GoRoute(
         path: '/onboarding2',
-        builder: (context, state) => const OnboardingSecondPage(),
+        builder: (_, __) => const OnboardingSecondScreen(),
       ),
       GoRoute(
         path: '/onboarding3',
-        builder: (context, state) => const OnboardingThirdPage(),
+        builder: (_, __) => const OnboardingThirdScreen(),
       ),
       GoRoute(
         path: '/onboarding4',
-        builder: (context, state) => const OnboardingFourthPage(),
+        builder: (_, __) => const OnboardingFourthScreen(),
       ),
 
+      // 소셜 로그인
       GoRoute(
-        path: '/login',
-        builder: (context, state) => const SocialLoginPage(),
+        path: '/socialLogin',
+        builder: (_, __) => const SocialLoginScreen(),
       ),
 
-      GoRoute(path: '/signup', builder: (context, state) => const SignupPage()),
+      // 회원가입
+      GoRoute(path: '/signup', builder: (_, __) => const SignupScreen()),
 
+      //홈 / 프로필 / FAQ
       ShellRoute(
-        builder: (context, state, child) => HomeShell(child: child),
+        builder: (_, __, child) => HomeShell(child: child),
         routes: [
-          GoRoute(path: '/home', builder: (_, __) => const HomePage()),
-          GoRoute(
-            path: '/profile',
-            builder: (_, __) => const PetProfileScreen(),
-          ),
+          GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+          // GoRoute(
+          //   path: '/profile',
+          //   builder: (_, __) => const PetProfileScreen(),
+          // ),
+          GoRoute(path: '/faq', builder: (_, __) => const FaqScreen()),
         ],
       ),
     ],
-    redirect: (context, state) async {
-      final prefs = await SharedPreferences.getInstance();
-      final doneOnboarding = prefs.getBool('onboarding_status') ?? false;
-      final isOnboardingRoute = state.matchedLocation.startsWith('/onboarding');
-      if (isOnboardingRoute) {
-        return null;
-      }
-      if (!doneOnboarding && !isOnboardingRoute) {
-        return '/onboarding1';
-      }
-
-      final isLoggedIn = authViewModel.userId != null;
-      final loggingIn = state.matchedLocation == '/login';
-
-      if (!isLoggedIn && !loggingIn) return '/login';
-      if (isLoggedIn && loggingIn) return '/signup';
-      return null;
-    },
   );
 }

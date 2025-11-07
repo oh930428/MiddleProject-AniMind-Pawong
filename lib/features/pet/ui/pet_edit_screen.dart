@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../domain/entities/pet_data.dart';
-import 'utils.dart';
 
 // 반려동물 정보를 추가하거나 수정하는 화면
 class PetEditScreen extends StatefulWidget {

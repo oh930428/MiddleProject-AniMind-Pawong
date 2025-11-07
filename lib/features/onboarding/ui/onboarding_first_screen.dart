@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class OnboardingSecondPage extends StatelessWidget {
-  const OnboardingSecondPage({super.key});
+class OnboardingFirstScreen extends StatelessWidget {
+  const OnboardingFirstScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Animind 앱 소개"), centerTitle: true),
       body: SafeArea(
         child: Column(
           children: [
+            //image
             Expanded(
               flex: 5,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(color: Colors.grey),
                 child: Image.asset(
-                  'assets/images/onboarding2.jpg',
+                  'assets/images/onboarding1.jpg',
                   fit: BoxFit.cover,
                 ),
               ),
             ),
+            //text
             Expanded(
               flex: 5,
               child: Padding(
@@ -29,7 +32,7 @@ class OnboardingSecondPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      '궁금한 점은 바로 질문해요',
+                      '반려동물 케어, 더 쉽게',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 28,
@@ -38,7 +41,7 @@ class OnboardingSecondPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '2번째 온보딩 화면입니다.\n다음을 누르세요.',
+                      '1번째 온보딩 화면입니다.\n다음을 누르세요.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
@@ -46,6 +49,7 @@ class OnboardingSecondPage extends StatelessWidget {
                 ),
               ),
             ),
+            //button
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: SizedBox(
@@ -53,7 +57,7 @@ class OnboardingSecondPage extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.go('/onboarding3');
+                    context.push('/onboarding2');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,

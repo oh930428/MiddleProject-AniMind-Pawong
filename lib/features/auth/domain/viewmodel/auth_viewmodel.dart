@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dio/dio.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -41,8 +42,9 @@ class AuthViewModel extends ChangeNotifier {
         serverClientId: dotenv.get("GOOGLE_WEB_CLIENT_ID"),
         clientId: dotenv.get("GOOGLE_ANDROID_CLIENT_ID"),
       );
+
       final googleUser = await googleSignIn.attemptLightweightAuthentication();
-      print("user: $googleUser");
+
       if (googleUser == null) {
         throw AuthException('Failed to sign in with Google.');
       }
@@ -62,16 +64,42 @@ class AuthViewModel extends ChangeNotifier {
         idToken: idToken,
         accessToken: authorization.accessToken,
       );
-
       return;
     } catch (e) {
       debugPrint("Google 로그인 실패: $e");
       rethrow;
     } finally {
-      if (userId == null) {
-        isLoading = false;
-        notifyListeners();
-      }
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // 회원가입 한 유저 확인
+  Future<List<User>> fetchUserById(String userId) async {
+    final dio = Dio();
+
+    final baseUrl = dotenv.get("SUPABASE_BASE_URL");
+    final supabaseKey = dotenv.get("SUPABASE_API_KEY");
+
+    try {
+      final response = await dio.get(
+        "$baseUrl/rest/v1/users",
+        options: Options(
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': "Bearer $supabaseKey",
+          },
+        ),
+        queryParameters: {'select': '*', 'id': 'eq.$userId'},
+      );
+
+      return (response.data as List)
+          .map((json) => User.fromJson(json))
+          .whereType<User>()
+          .toList();
+    } catch (e) {
+      debugPrint('❌ Error fetching user: $e');
+      rethrow;
     }
   }
 

@@ -93,3 +93,14 @@ class AppElevation {
     ),
   ];
 }
+
+// --------------------------------------------------------------------------
+// 5. 반려동물 프로필 컬러
+// --------------------------------------------------------------------------
+class PetColors {
+  static const Color border = Color(0xFFE0E0E0);
+  static const Color cardBackground = Colors.white;
+  static const Color primary = Color(0xFF6200EE);
+  static const Color lightGrey = Color(0xFFF5F5F5);
+  static const Color textSecondary = Color(0xFF757575);
+}

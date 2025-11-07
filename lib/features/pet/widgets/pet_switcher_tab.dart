@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/ui/utils.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../domain/entities/pet_data.dart';
 
 // 여러 반려동물을 탭 형태로 전환하며 보여주는 위젯

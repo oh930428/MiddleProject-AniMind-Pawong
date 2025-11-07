@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../auth/domain/viewmodel/auth_view_model.dart';
+import '../../auth/domain/viewmodel/auth_viewmodel.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,10 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ElevatedButton(
-            onPressed: context.read<AuthViewModel>().logOut,
+            onPressed: () async {
+              await context.read<AuthViewModel>().logOut();
+              context.go("/socialLogin");
+            },
             child: Text("로그아웃"),
           ),
         ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardingFourthPage extends StatelessWidget {
-  const OnboardingFourthPage({super.key});
+class OnboardingFourthScreen extends StatelessWidget {
+  const OnboardingFourthScreen({super.key});
 
   Future<void> _saveOnboardingStatus() async {
     final prefs = await SharedPreferences.getInstance();
@@ -58,10 +58,9 @@ class OnboardingFourthPage extends StatelessWidget {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    _saveOnboardingStatus();
-
-                    context.go('/login');
+                  onPressed: () async {
+                    await _saveOnboardingStatus();
+                    context.go("/socialLogin");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,

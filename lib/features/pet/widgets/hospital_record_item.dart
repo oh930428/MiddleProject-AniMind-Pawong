@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../domain/entities/pet_data.dart';
-import '../ui/utils.dart';
 
 // 병원 기록 항목을 보여주는 위젯
 class HospitalRecordItem extends StatelessWidget {
