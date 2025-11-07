@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ui/utils.dart';
+import '../../../core/theme/app_colors.dart';
 
 // 반려동물의 상세 정보를 그리드 형태로 보여주는 카드 위젯
 class InfoGridCard extends StatelessWidget {

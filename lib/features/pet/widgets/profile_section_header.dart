@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ui/utils.dart';
+import '../../../core/theme/app_colors.dart';
 
 // 프로필 섹션의 헤더를 표시하는 위젯
 class ProfileSectionHeader extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/utils.dart';
 
-import '../entities/pet_data.dart';
+import '../../../core/theme/app_colors.dart';
+import '../domain/entities/pet_data.dart';
 
 class HospitalRecordScreen extends StatefulWidget {
   final Pet pet;

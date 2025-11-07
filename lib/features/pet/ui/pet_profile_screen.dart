@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/hospital_record_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/pet_edit_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/setting_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/utils.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/widgets/hospital_record_item.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/widgets/info_grid_card.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/widgets/pet_switcher_tab.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/widgets/profile_card.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/widgets/profile_section_header.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet_data.dart';
+import 'package:middleproject_animind_pawong/features/pet/ui/hospital_record_screen.dart';
+import 'package:middleproject_animind_pawong/features/pet/ui/pet_edit_screen.dart';
+import 'package:middleproject_animind_pawong/features/pet/ui/setting_screen.dart';
+import 'package:middleproject_animind_pawong/features/pet/widgets/hospital_record_item.dart';
+import 'package:middleproject_animind_pawong/features/pet/widgets/info_grid_card.dart';
+import 'package:middleproject_animind_pawong/features/pet/widgets/pet_switcher_tab.dart';
+import 'package:middleproject_animind_pawong/features/pet/widgets/profile_card.dart';
+import 'package:middleproject_animind_pawong/features/pet/widgets/profile_section_header.dart';
 
-import '../entities/pet_data.dart';
+import '../../../core/theme/app_colors.dart';
 
 // 반려동물 프로필을 보여주는 메인 화면
 class PetProfileScreen extends StatefulWidget {
