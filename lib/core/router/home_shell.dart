@@ -32,7 +32,7 @@ class HomeShell extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: '프로필'),
           BottomNavigationBarItem(
             icon: Icon(Icons.question_mark),
-            label: 'faq',
+            label: 'FAQ',
           ),
         ],
       ),
