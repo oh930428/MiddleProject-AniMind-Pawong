@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/router/app_router.dart';
-import 'features/auth/domain/viewmodel/auth_view_model.dart';
+import 'features/auth/domain/viewmodel/auth_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,12 +27,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final router = createRouter(context);
-
     return MaterialApp.router(
-      title: 'Animind',
       debugShowCheckedModeBanner: false,
-      routerConfig: router,
+      routerConfig: createRouter(context),
+      title: "Animind",
     );
   }
 }

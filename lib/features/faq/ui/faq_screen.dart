@@ -8,14 +8,14 @@ class FAQ {
   FAQ({required this.category, required this.question, required this.answer});
 }
 
-class FAQPage extends StatefulWidget {
-  const FAQPage({super.key});
+class FaqScreen extends StatefulWidget {
+  const FaqScreen({super.key});
 
   @override
-  State<FAQPage> createState() => _FAQPageState();
+  State<FaqScreen> createState() => _FAQPageState();
 }
 
-class _FAQPageState extends State<FAQPage> {
+class _FAQPageState extends State<FaqScreen> {
   String selectedCategory = '전체';
   int? expandedIndex;
 

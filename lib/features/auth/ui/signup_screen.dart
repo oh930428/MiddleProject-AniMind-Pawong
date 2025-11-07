@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_view_model.dart';
-import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/signup_view_model.dart';
+import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_viewmodel.dart';
+import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/signup_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
