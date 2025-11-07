@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/ui/utils.dart';
 
-import '../entities/pet_data.dart';
+import '../domain/entities/pet_data.dart';
+import '../ui/utils.dart';
 
 // 반려동물의 기본 정보를 보여주는 카드 위젯
 class ProfileCard extends StatelessWidget {

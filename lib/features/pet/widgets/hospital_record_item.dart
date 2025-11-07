@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../entities/pet_data.dart';
+import '../domain/entities/pet_data.dart';
 import '../ui/utils.dart';
 
 // 병원 기록 항목을 보여주는 위젯

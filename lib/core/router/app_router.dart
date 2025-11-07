@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/features/auth/domain/ui/signup_page.dart';
+import 'package:middleproject_animind_pawong/features/pet/ui/pet_profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +14,6 @@ import '../../features/onboarding/domain//ui/onboarding_first_page.dart';
 import '../../features/onboarding/domain//ui/onboarding_fourth_page.dart';
 import '../../features/onboarding/domain//ui/onboarding_second_page.dart';
 import '../../features/onboarding/domain//ui/onboarding_third_page.dart';
-import '../../features/pet/domain/ui/pet_profile_screen.dart';
 import 'home_shell.dart';
 
 GoRouter createRouter(BuildContext context) {
