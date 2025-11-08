@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../core/theme/app_colors.dart';
+import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 
 // 반려동물의 상세 정보를 그리드 형태로 보여주는 카드 위젯
 class InfoGridCard extends StatelessWidget {
@@ -16,9 +15,9 @@ class InfoGridCard extends StatelessWidget {
       ).copyWith(bottom: 2),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: PetColors.cardBackground,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(AppLayout.cardRadius),
-        border: Border.all(color: PetColors.border, width: 1),
+        border: Border.all(color: AppColors.border, width: 1),
       ),
       child: GridView.builder(
         shrinkWrap: true,
@@ -40,7 +39,7 @@ class InfoGridCard extends StatelessWidget {
                 item['label']!,
                 style: Theme.of(
                   context,
-                ).textTheme.bodySmall?.copyWith(color: PetColors.textSecondary),
+                ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 4),
               Text(

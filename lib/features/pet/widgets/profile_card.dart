@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import '../../../core/theme/app_colors.dart';
-import '../domain/entities/pet_data.dart';
+import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
 
 // 반려동물의 기본 정보를 보여주는 카드 위젯
 class ProfileCard extends StatelessWidget {
@@ -27,7 +26,7 @@ class ProfileCard extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: PetColors.cardBackground,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(AppLayout.cardRadius),
         boxShadow: [
           BoxShadow(
@@ -41,9 +40,11 @@ class ProfileCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 45,
-            backgroundColor: PetColors.lightGrey,
-            backgroundImage: backgroundImage,
-            child: backgroundImage == null
+            backgroundColor: AppColors.lightGrey,
+            backgroundImage: backgroundImage, // 변경
+            child:
+                backgroundImage ==
+                    null // 변경
                 ? const Icon(Icons.pets, size: 40, color: Colors.grey)
                 : null,
           ),
@@ -58,12 +59,6 @@ class ProfileCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                '${pet.species} / ${pet.breed}',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: PetColors.textSecondary),
-              ),
             ],
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../domain/entities/pet_data.dart';
 
 // 여러 반려동물을 탭 형태로 전환하며 보여주는 위젯
 class PetSwitcherTab extends StatelessWidget {
@@ -44,7 +44,7 @@ class PetSwitcherTab extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? PetColors.primary
+                          ? AppColors.primary
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(16),
                     ),

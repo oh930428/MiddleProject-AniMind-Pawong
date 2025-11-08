@@ -11,6 +11,7 @@ class AppColors {
   static const Color textPrimary = Color(0xFF1A1A1A);
   static const Color textSecondary = Color(0xFF6B6B6B);
   static const Color border = Color(0xFFE5E5E5);
+  static const Color lightGrey = Color(0xFFF5F5F5);
   static const Color background = Color(0xFFF7F8FA);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color danger = Color(0xFFFF4D4F);
@@ -75,8 +76,7 @@ class AppLayout {
   static const double elementSpacing = 12.0;
   static const double iconTextSpacing = 8.0;
   static const double cardRadius = 16.0;
-  static const double minTouchTarget =
-      48.0; // 44dp + padding/margin for 48dp total
+  static const double minTouchTarget = 48.0;
 }
 
 // --------------------------------------------------------------------------
@@ -92,15 +92,4 @@ class AppElevation {
       offset: Offset(0, 2),
     ),
   ];
-}
-
-// --------------------------------------------------------------------------
-// 5. 반려동물 프로필 컬러
-// --------------------------------------------------------------------------
-class PetColors {
-  static const Color border = Color(0xFFE0E0E0);
-  static const Color cardBackground = Colors.white;
-  static const Color primary = Color(0xFF6200EE);
-  static const Color lightGrey = Color(0xFFF5F5F5);
-  static const Color textSecondary = Color(0xFF757575);
 }
