@@ -40,7 +40,7 @@ class AuthViewModel extends ChangeNotifier {
 
       await googleSignIn.initialize(
         serverClientId: dotenv.get("GOOGLE_WEB_CLIENT_ID"),
-        clientId: dotenv.get("GOOGLE_ANDROID_CLIENT_ID"),
+        // clientId: dotenv.get("GOOGLE_ANDROID_CLIENT_ID"),
       );
 
       final googleUser = await googleSignIn.attemptLightweightAuthentication();

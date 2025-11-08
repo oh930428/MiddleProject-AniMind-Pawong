@@ -13,6 +13,7 @@ class OnboardingFourthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("마무리 단계"), centerTitle: true),
       body: SafeArea(
         child: Column(
           children: [

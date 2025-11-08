@@ -6,7 +6,7 @@ class Pet {
   final String id; // (DB: id) 고유 식별자
   final String name; // (DB: pet_name)
   final String? breedId; // (DB: breeds_id) 품종 ID (int8 -> String)
-  final DateTime? birthDate; // (DB: pet_birth)
+  final String? birthDate; // (DB: pet_birth)
   final String imageUrl; // (DB: pet_image_url)
   final double? weight; // (DB: pet_weight)
   final String gender; // (DB: pet_gender)
@@ -61,7 +61,7 @@ class Pet {
       tags: tags ?? this.tags,
       infoGridData: infoGridData ?? this.infoGridData,
       records: records ?? this.records,
-      birthDate: birthDate ?? this.birthDate,
+      birthDate: this.birthDate,
       weight: weight ?? this.weight,
       gender: gender ?? this.gender,
       isNeutered: isNeutered ?? this.isNeutered,
