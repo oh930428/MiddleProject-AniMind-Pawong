@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'home_shell.dart';
 
 // ViewModel
 import '../../features/auth/domain/viewmodel/auth_viewmodel.dart';
-
-// UI
 import '../../features/auth/ui/signup_screen.dart';
 import '../../features/auth/ui/social_login_screen.dart';
+import '../../features/faq/ui/faq_screen.dart';
+import '../../features/home/presentation/ui/home_screen.dart';
+import '../../features/notification/ui/notification_screen.dart';
 import '../../features/onboarding/ui/onboarding_first_screen.dart';
 import '../../features/onboarding/ui/onboarding_fourth_screen.dart';
 import '../../features/onboarding/ui/onboarding_second_screen.dart';
 import '../../features/onboarding/ui/onboarding_third_screen.dart';
-import '../../features/home/presentation/ui/home_screen.dart';
 import '../../features/pet/ui/pet_profile_screen.dart';
-import '../../features/faq/ui/faq_screen.dart';
+// UI
 import '../../features/splash/ui/splash_screen.dart';
+import 'home_shell.dart';
 
 GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
@@ -65,6 +65,10 @@ GoRouter createRouter(BuildContext context) {
             builder: (_, __) => const PetProfileScreen(),
           ),
           GoRoute(path: '/faq', builder: (_, __) => const FaqScreen()),
+          GoRoute(
+            path: '/notification',
+            builder: (_, __) => const NotificationScreen(),
+          ),
         ],
       ),
     ],

@@ -25,6 +25,9 @@ class HomeShell extends StatelessWidget {
             case 2:
               context.go('/faq');
               break;
+            case 3:
+              context.go('/notification');
+              break;
           }
         },
         items: const [
@@ -34,6 +37,7 @@ class HomeShell extends StatelessWidget {
             icon: Icon(Icons.question_mark),
             label: 'FAQ',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: '알림'),
         ],
       ),
     );
@@ -42,6 +46,9 @@ class HomeShell extends StatelessWidget {
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     if (location.startsWith('/profile')) return 1;
+    if (location.startsWith('/faq')) return 2;
+    if (location.startsWith('/notification')) return 3;
+
     return 0;
   }
 }
