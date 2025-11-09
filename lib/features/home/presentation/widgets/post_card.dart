@@ -12,8 +12,8 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: PetColors.cardBackground,
-        border: Border.all(color: PetColors.border, width: 1),
+        color: AppColors.cardBackground,
+        border: Border.all(color: AppColors.border, width: 1),
         borderRadius: BorderRadius.circular(AppLayout.cardRadius),
         boxShadow: [
           BoxShadow(

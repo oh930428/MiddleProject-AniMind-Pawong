@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../pet/domain/entities/hospital_records.dart';
 
 class HospitalCard extends StatelessWidget {
-  final HospitalRecord record;
+  final MedicalRecords record;
 
   const HospitalCard({super.key, required this.record});
 
@@ -16,14 +16,14 @@ class HospitalCard extends StatelessWidget {
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppLayout.cardRadius),
-        side: const BorderSide(color: PetColors.border, width: 1),
+        side: const BorderSide(color: AppColors.border, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Row(
           spacing: 10,
           children: [
-            const Icon(Icons.local_hospital_outlined, color: PetColors.primary),
+            const Icon(Icons.local_hospital_outlined, color: AppColors.primary),
             Expanded(
               child: Column(
                 spacing: 4,
@@ -39,12 +39,11 @@ class HospitalCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (record.nextVisitAt != null &&
-                      record.nextVisitAt!.isNotEmpty)
+                  if (record.nextVisitat != null && record.nextVisitat != null)
                     Text(
-                      '다음 방문: ${record.nextVisitAt}',
+                      '다음 방문: ${record.nextVisitat}',
                       style: TextStyle(
-                        color: PetColors.primary,
+                        color: AppColors.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -52,7 +51,7 @@ class HospitalCard extends StatelessWidget {
               ),
             ),
             Text(
-              record.visitedAt,
+              record.visitedat as String,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

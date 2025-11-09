@@ -40,7 +40,7 @@ class PetSwitcherTab extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected ? PetColors.primary : Colors.transparent,
+                  color: isSelected ? AppColors.primary : Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(

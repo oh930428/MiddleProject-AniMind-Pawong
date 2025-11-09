@@ -22,7 +22,7 @@ class PetCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: PetColors.cardBackground,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(AppLayout.cardRadius),
         boxShadow: [
           BoxShadow(
@@ -36,7 +36,7 @@ class PetCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 45,
-            backgroundColor: PetColors.lightGrey,
+            backgroundColor: AppColors.lightGrey,
             backgroundImage: backgroundImage,
             child: backgroundImage == null
                 ? const Icon(Icons.pets, size: 40, color: Colors.grey)
@@ -54,10 +54,10 @@ class PetCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '강아지 / ${pet.breed}',
+                '${pet.species_name} / ${pet.breeds_name}',
                 style: Theme.of(
                   context,
-                ).textTheme.bodyLarge?.copyWith(color: PetColors.textSecondary),
+                ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
               ),
             ],
           ),
