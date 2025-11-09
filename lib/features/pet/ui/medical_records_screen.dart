@@ -1,50 +1,57 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
+import 'package:middleproject_animind_pawong/features/pet/data/repogitories/pet_repository.dart'
+    show PetRepository;
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../domain/entities/pet_data.dart';
-
-class HospitalRecordScreen extends StatefulWidget {
+class MedicalRecordsScreen extends StatefulWidget {
   final Pet pet;
 
-  const HospitalRecordScreen({super.key, required this.pet});
+  const MedicalRecordsScreen({super.key, required this.pet});
 
   @override
-  _HospitalRecordScreenState createState() => _HospitalRecordScreenState();
+  _MedicalRecordsScreenState createState() => _MedicalRecordsScreenState();
 }
 
-class _HospitalRecordScreenState extends State<HospitalRecordScreen> {
-  late List<HospitalRecord> _records;
+class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
+  late Future<List<MedicalRecords>> _recordsFuture;
   final PetRepository _repo = PetRepository();
 
   @override
   void initState() {
     super.initState();
-    _records = _repo.getHospitalRecords(widget.pet.id);
+    _loadRecords();
   }
 
-  void _addOrEditRecord([HospitalRecord? record]) async {
-    final result = await showDialog<HospitalRecord>(
+  void _loadRecords() {
+    setState(() {
+      _recordsFuture = _repo.getMedicalRecords(widget.pet.id);
+    });
+  }
+
+  void _addOrEditRecord([MedicalRecords? record]) async {
+    final result = await showDialog<MedicalRecords>(
       context: context,
       builder: (context) => _RecordEditDialog(record: record),
     );
 
     if (result != null) {
-      setState(() {
-        if (record == null) {
-          // Add
-          _repo.addHospitalRecord(widget.pet.id, result);
-        } else {
-          // Edit
-          _repo.updateHospitalRecord(widget.pet.id, result);
-        }
-        _records = _repo.getHospitalRecords(widget.pet.id);
-      });
+      if (record == null) {
+        // Add
+        await _repo.addMedicalRecords(widget.pet.id, result);
+      } else {
+        // Edit
+        await _repo.updateMedicalRecords(widget.pet.id, result);
+      }
+      _loadRecords();
     }
   }
 
-  void _deleteRecord(HospitalRecord record) {
+  void _deleteRecord(MedicalRecords record) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -56,11 +63,9 @@ class _HospitalRecordScreenState extends State<HospitalRecordScreen> {
             child: const Text('취소'),
           ),
           TextButton(
-            onPressed: () {
-              setState(() {
-                _repo.deleteHospitalRecord(widget.pet.id, record.id);
-                _records = _repo.getHospitalRecords(widget.pet.id);
-              });
+            onPressed: () async {
+              await _repo.deleteMedicalRecords(widget.pet.id, record.id);
+              _loadRecords();
               Navigator.of(context).pop();
             },
             child: Text(
@@ -76,88 +81,104 @@ class _HospitalRecordScreenState extends State<HospitalRecordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: PetColors.lightGrey,
+      backgroundColor: AppColors.lightGrey,
       appBar: AppBar(title: Text('${widget.pet.name} - 병원 기록')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addOrEditRecord(),
         child: const Icon(Icons.add),
       ),
-      body: _records.isEmpty
-          ? const Center(child: Text('등록된 병원 기록이 없습니다.'))
-          : ListView.builder(
-              padding: const EdgeInsets.all(AppLayout.horizontalPadding),
-              itemCount: _records.length,
-              itemBuilder: (context, index) {
-                final record = _records[index];
-                return Card(
-                  margin: const EdgeInsets.only(
-                    bottom: AppLayout.elementSpacing,
+      body: FutureBuilder<List<MedicalRecords>>(
+        future: _recordsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            print('FutureBuilder error: ${snapshot.error}');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final records = snapshot.data ?? [];
+
+          if (records.isEmpty) {
+            return const Center(child: Text('등록된 병원 기록이 없습니다.'));
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: records.length,
+            itemBuilder: (context, index) {
+              final record = records[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 8.0),
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  side: const BorderSide(color: AppColors.border, width: 1),
+                ),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.local_hospital,
+                    color: AppColors.primary,
                   ),
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppLayout.cardRadius),
-                    side: const BorderSide(color: PetColors.border, width: 1),
+                  title: Text(
+                    record.visitReason,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.local_hospital,
-                      color: PetColors.primary,
-                    ),
-                    title: Text(
-                      record.visitReason,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('방문일: ${record.visitDate}'),
-                        Text('메모: ${record.memo}'),
-                        if (record.nextVisitDate != null &&
-                            record.nextVisitDate!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              '다음 방문일: ${record.nextVisitDate}',
-                              style: TextStyle(
-                                color: PetColors.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '방문일: ${record.visitedat != null ? DateFormat('yyyy-MM-dd').format(record.visitedat!) : '날짜 미상'}',
+                      ),
+                      Text('메모: ${record.memo}'),
+                      if (record.nextVisitat != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            '다음 방문일: ${DateFormat('yyyy-MM-dd').format(record.nextVisitat!)}',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                      ],
-                    ),
-
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.edit_outlined,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          onPressed: () => _addOrEditRecord(record),
-                          tooltip: '수정',
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.delete_outline,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          onPressed: () => _deleteRecord(record),
-                          tooltip: '삭제',
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
-                );
-              },
-            ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.edit_outlined,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        onPressed: () => _addOrEditRecord(record),
+                        tooltip: '수정',
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        onPressed: () => _deleteRecord(record),
+                        tooltip: '삭제',
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
 
 class _RecordEditDialog extends StatefulWidget {
-  final HospitalRecord? record;
+  final MedicalRecords? record;
 
   const _RecordEditDialog({this.record});
 
@@ -176,15 +197,17 @@ class __RecordEditDialogState extends State<_RecordEditDialog> {
   void initState() {
     super.initState();
     _visitDateController = TextEditingController(
-      text:
-          widget.record?.visitDate ??
-          DateTime.now().toIso8601String().substring(0, 10),
+      text: widget.record?.visitedat == null
+          ? DateFormat('yyyy-MM-dd').format(DateTime.now())
+          : DateFormat('yyyy-MM-dd').format(widget.record!.visitedat!),
     );
     _visitReasonController = TextEditingController(
       text: widget.record?.visitReason ?? '',
     );
     _nextVisitDateController = TextEditingController(
-      text: widget.record?.nextVisitDate ?? '',
+      text: widget.record?.nextVisitat == null
+          ? ''
+          : DateFormat('yyyy-MM-dd').format(widget.record!.nextVisitat!),
     );
     _memoController = TextEditingController(text: widget.record?.memo ?? '');
   }
@@ -200,12 +223,12 @@ class __RecordEditDialogState extends State<_RecordEditDialog> {
 
   void _onSave() {
     if (_formKey.currentState!.validate()) {
-      final newRecord = HospitalRecord(
+      final newRecord = MedicalRecords(
         id: widget.record?.id ?? Random().nextInt(10000).toString(),
-        visitDate: _visitDateController.text,
+        visitedat: DateTime.parse(_visitDateController.text),
         visitReason: _visitReasonController.text,
-        nextVisitDate: _nextVisitDateController.text.isNotEmpty
-            ? _nextVisitDateController.text
+        nextVisitat: _nextVisitDateController.text.isNotEmpty
+            ? DateTime.parse(_nextVisitDateController.text)
             : null,
         memo: _memoController.text,
       );
@@ -224,7 +247,7 @@ class __RecordEditDialogState extends State<_RecordEditDialog> {
       lastDate: DateTime(2100),
     );
     if (date != null) {
-      controller.text = date.toIso8601String().substring(0, 10);
+      controller.text = DateFormat('yyyy-MM-dd').format(date);
     }
   }
 
