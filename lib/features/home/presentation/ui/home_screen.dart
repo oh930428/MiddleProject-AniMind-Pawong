@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/features/home/presentation/widgets/post_card.dart';
+import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../pet/domain/entities/hospital_records.dart';
 import '../../../pet/domain/entities/pet.dart';
 import '../../domain/entities/post_item.dart';
 import '../widgets/pet_switcher_tab.dart';
 import '../widgets/hospital_card.dart';
 import '../widgets/pet_card.dart';
+import '../widgets/post_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -171,75 +171,71 @@ final List<Pet> _pets = [
     name: '레오',
     imageUrl:
         'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    breed: '골든 리트리버',
+    breeds_name: '골든 리트리버',
     weight: 28.5,
-    birthDate: '2021-08-15',
+    birthDate: DateTime.parse('2024-10-28'),
     gender: '수컷',
     isNeutered: false,
-    type: '',
     tags: [],
-    infoGridData: {},
     records: [],
+    species_name: '',
+    infoGridData: [],
+    age: '',
   ),
   Pet(
     id: '2',
     name: '루나',
     imageUrl:
         'https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?q=80&w=2869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-
-    breed: '코리안 숏헤어',
+    breeds_name: '코리안 숏헤어',
     weight: 4.8,
-    birthDate: '2022-05-20',
+    birthDate: DateTime.parse('2024-10-28'),
     gender: '암컷',
-    type: '',
     tags: [],
-    infoGridData: {},
     records: [],
     isNeutered: false,
+    species_name: '',
+    age: '',
+    infoGridData: [],
   ),
   Pet(
     id: '3',
     name: '코코',
     imageUrl:
         'https://images.unsplash.com/photo-1552053831-71594a27632d?q=80&w=2862&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    breed: '푸들',
     weight: 6.2,
-    birthDate: '2019-11-11',
+    birthDate: DateTime.parse('2024-10-28'),
     gender: '수컷',
-    type: '',
     tags: [],
-    infoGridData: {},
     records: [],
     isNeutered: false,
+    species_name: '',
+    breeds_name: '푸들',
+    age: '',
+    infoGridData: [],
   ),
 ];
 
-final List<HospitalRecord> _records = [
-  HospitalRecord(
+final List<MedicalRecords> _records = [
+  MedicalRecords(
     id: 'rec1',
-    hospitalName: '',
-    title: '',
     visitReason: '정기 검진',
-    visitedAt: '2024-10-28',
-    nextVisitAt: '2025-04-28',
+    visitedat: DateTime.parse('2024-10-28'),
+    nextVisitat: DateTime.parse('2024-10-28'),
     memo: '건강 양호, 체중 관리 필요, 약 제시간에 먹여야함',
   ),
-  HospitalRecord(
+  MedicalRecords(
     id: 'rec2',
-    hospitalName: '',
-    title: '',
     visitReason: '예방 접종',
-    visitedAt: '2024-08-15',
-    nextVisitAt: '2025-04-28',
+    visitedat: DateTime.parse('2024-10-28'),
+    nextVisitat: DateTime.parse('2024-10-28'),
     memo: '종합 백신 4차 완료',
   ),
-  HospitalRecord(
+  MedicalRecords(
     id: 'rec3',
-    hospitalName: '',
-    title: '',
     visitReason: '피부병 검사',
-    visitedAt: '2024-09-20',
-    nextVisitAt: '2025-04-28',
+    visitedat: DateTime.parse('2024-10-28'),
+    nextVisitat: DateTime.parse('2024-10-28'),
     memo: '알레르기성 피부염 진단',
   ),
 ];
