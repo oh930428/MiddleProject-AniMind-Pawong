@@ -13,10 +13,10 @@ class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
 
   @override
-  State<FaqScreen> createState() => _FAQScreenState();
+  State<FaqScreen> createState() => _FaqScreenState();
 }
 
-class _FAQScreenState extends State<FaqScreen> {
+class _FaqScreenState extends State<FaqScreen> {
   String selectedCategory = '전체';
   int? expandedIndex;
   String searchQuery = '';

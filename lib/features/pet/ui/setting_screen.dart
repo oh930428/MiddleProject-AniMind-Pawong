@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
+import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 설정 화면 위젯
 class SettingsScreen extends StatelessWidget {
@@ -8,6 +12,11 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    Future<void> _changeOrnboardingStatus() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('onboarding_status', false);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +64,7 @@ class SettingsScreen extends StatelessWidget {
                 subtitle: Text('구글 로그인'),
               ),
             ),
+
             const SizedBox(height: AppLayout.sectionSpacing),
 
             // ------------------------------------
@@ -84,9 +94,10 @@ class SettingsScreen extends StatelessWidget {
                     icon: Icons.logout,
                     title: '로그아웃',
                     subtitle: '다른 계정으로 로그인하기',
-                    onTap: () {
-                      // TODO: 로그아웃 기능 구현
-                      _showActionSnackbar(context, '로그아웃 기능이 호출되었습니다.');
+                    onTap: () async {
+                      await context.read<AuthViewModel>().logOut();
+                      _showActionSnackbar(context, '로그아웃이 되었습니다.');
+                      context.go("/splash");
                     },
                   ),
                   Divider(
@@ -100,8 +111,9 @@ class SettingsScreen extends StatelessWidget {
                     title: '온보딩 다시 보기',
                     subtitle: '앱 소개를 다시 확인합니다',
                     isLast: true,
-                    onTap: () {
+                    onTap: () async {
                       // TODO: 온보딩 화면으로 이동
+                      await _changeOrnboardingStatus();
                       _showActionSnackbar(context, '온보딩 재시작 기능이 호출되었습니다.');
                     },
                   ),
@@ -217,8 +229,8 @@ class SettingsScreen extends StatelessWidget {
 
   // 임시 액션 스낵바
   void _showActionSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: const Duration(seconds: 1)),
+    );
   }
 }

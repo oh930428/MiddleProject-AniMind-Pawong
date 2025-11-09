@@ -129,11 +129,6 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () {},
-          tooltip: '뒤로가기',
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
