@@ -60,14 +60,14 @@ GoRouter createRouter(BuildContext context) {
         builder: (_, __, child) => HomeShell(child: child),
         routes: [
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
-          GoRoute(
-            path: '/profile',
-            builder: (_, __) => const PetProfileScreen(),
-          ),
           GoRoute(path: '/faq', builder: (_, __) => const FaqScreen()),
           GoRoute(
             path: '/notification',
             builder: (_, __) => const NotificationScreen(),
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (_, __) => const PetProfileScreen(),
           ),
         ],
       ),

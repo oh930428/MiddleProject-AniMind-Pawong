@@ -41,7 +41,7 @@ class HospitalCard extends StatelessWidget {
                   ),
                   if (record.nextVisitat != null && record.nextVisitat != null)
                     Text(
-                      '다음 방문: ${record.nextVisitat}',
+                      '다음 방문일: ${record.nextVisitat!.year}-${record.nextVisitat!.month.toString().padLeft(2, '0')}-${record.nextVisitat!.day.toString().padLeft(2, '0')}',
                       style: TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w500,
@@ -51,7 +51,9 @@ class HospitalCard extends StatelessWidget {
               ),
             ),
             Text(
-              record.visitedat as String,
+              record.visitedat != null
+                  ? "${record.visitedat!.year}-${record.visitedat!.month.toString().padLeft(2, '0')}-${record.visitedat!.day.toString().padLeft(2, '0')}"
+                  : '',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
