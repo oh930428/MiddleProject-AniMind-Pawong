@@ -61,16 +61,43 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
     if (result != null && result is Map) {
       final Pet petResult = result['pet'];
       final File? imageFile = result['image'];
-      if (pet == null) {
-        await _repo.addPet(petResult, imageFile);
-      } else {
-        await _repo.updatePet(petResult, imageFile);
+      try {
+        if (pet == null) {
+          final newPet = await _repo.addPet(petResult, imageFile) as Pet;
+          setState(() {
+            _selectedPet = newPet;
+          });
+          _loadPets();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('반려동물이 성공적으로 추가되었습니다.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          final updatedPet = await _repo.updatePet(petResult, imageFile) as Pet;
+          setState(() {
+            _selectedPet = updatedPet;
+          });
+          _loadPets();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('반려동물 정보가 성공적으로 업데이트되었습니다.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('오류 발생: ${e.toString()}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
       }
-      _loadPets();
     }
-  }
+  } // 병원 기록 화면으로 이동하는 함수
 
-  // 병원 기록 화면으로 이동하는 함수
   void _navigateToRecordScreen(Pet pet) async {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => MedicalRecordsScreen(pet: pet)),
@@ -102,7 +129,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
             ElevatedButton(
               onPressed: () async {
                 final petName = _selectedPet!.name;
-                await _repo.deletePet(_selectedPet!.id);
+                await _repo.deletePet(_selectedPet!.id!);
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -254,7 +281,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                   ),
                   const SizedBox(height: AppLayout.elementSpacing),
                   FutureBuilder<List<MedicalRecords>>(
-                    future: _repo.getMedicalRecords(_selectedPet!.id),
+                    future: _repo.getMedicalRecords(_selectedPet!.id!),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());

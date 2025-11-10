@@ -214,7 +214,7 @@ class _PetEditScreenState extends State<PetEditScreen> {
         infoGridData: widget.pet?.infoGridData ?? [],
         records: widget.pet?.records ?? [],
       );
-      Navigator.of(context).pop(newPet);
+      Navigator.of(context).pop({'pet': newPet, 'image': _pickedImage});
     }
   }
 
