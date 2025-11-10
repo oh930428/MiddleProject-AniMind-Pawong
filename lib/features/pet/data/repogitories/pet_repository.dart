@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:intl/intl.dart';
 import 'package:middleproject_animind_pawong/features/pet/data/repogitories/supabase_data.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
@@ -33,12 +35,12 @@ class PetRepository {
     return petsWithInfo;
   }
 
-  Future<void> addPet(Pet pet) {
-    return _dataSource.addPet(pet);
+  Future<void> addPet(Pet pet, File? imageFile) {
+    return _dataSource.addPet(pet, imageFile);
   }
 
-  Future<void> updatePet(Pet pet) {
-    return _dataSource.updatePet(pet);
+  Future<void> updatePet(Pet pet, File? imageFile) {
+    return _dataSource.updatePet(pet, imageFile);
   }
 
   Future<void> deletePet(String petId) {
