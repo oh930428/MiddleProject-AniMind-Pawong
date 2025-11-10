@@ -1,6 +1,7 @@
 // 병원 기록 정보를 담는 클래스
 class MedicalRecords {
   final String id;
+  final String? userId;
   final DateTime? visitedat;
   final String visitReason;
   final DateTime? nextVisitat;
@@ -8,6 +9,7 @@ class MedicalRecords {
 
   MedicalRecords({
     required this.id,
+    this.userId,
     required this.visitedat,
     required this.visitReason,
     this.nextVisitat,
@@ -18,6 +20,7 @@ class MedicalRecords {
     print('Parsing HospitalRecord from JSON: $json');
     return MedicalRecords(
       id: json['id']?.toString() ?? '',
+      userId: json['user_id']?.toString(),
       visitedat: json['visited_at'] != null
           ? DateTime.tryParse(json['visited_at'].toString())
           : null,
@@ -30,11 +33,16 @@ class MedicalRecords {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final map = <String, dynamic>{
+      'id': id,
       'visited_at': visitedat?.toIso8601String(),
       'visit_reason': visitReason,
       'next_visit_at': nextVisitat?.toIso8601String(),
       'memo': memo,
     };
+    if (userId != null) {
+      map['user_id'] = userId;
+    }
+    return map;
   }
 }
