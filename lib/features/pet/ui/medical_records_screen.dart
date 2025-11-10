@@ -1,12 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
-import 'package:middleproject_animind_pawong/features/pet/data/repogitories/pet_repository.dart'
-    show PetRepository;
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
+
+import '../../../core/theme/app_colors.dart';
+import '../data/repogitories/pet_repository.dart';
+import '../domain/entities/medical_records.dart';
+import '../domain/entities/pet.dart';
+import 'medical_records_edit_screen.dart';
 
 class MedicalRecordsScreen extends StatefulWidget {
   final Pet pet;
@@ -34,9 +33,10 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
   }
 
   void _addOrEditRecord([MedicalRecords? record]) async {
-    final result = await showDialog<MedicalRecords>(
-      context: context,
-      builder: (context) => _RecordEditDialog(record: record),
+    final result = await Navigator.of(context).push<MedicalRecords>(
+      MaterialPageRoute(
+        builder: (context) => HospitalRecordEditScreen(record: record),
+      ),
     );
 
     if (result != null) {
@@ -55,23 +55,28 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('기록 삭제'),
-        content: const Text('이 병원 기록을 삭제하시겠습니까?'),
+        title: const Text('병원 기록 삭제'),
+        content: const Text('정말 이 병원 기록을 삭제하시겠습니까? \n 삭제된 기록은 복구할 수 없습니다'),
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () => Navigator.of(context).pop(),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey.shade700, width: 2),
+              foregroundColor: Colors.black,
+            ),
             child: const Text('취소'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () async {
               await _repo.deleteMedicalRecords(widget.pet.id, record.id);
               _loadRecords();
               Navigator.of(context).pop();
             },
-            child: Text(
-              '삭제',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Colors.white,
             ),
+            child: const Text('삭제'),
           ),
         ],
       ),
@@ -173,142 +178,6 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
           );
         },
       ),
-    );
-  }
-}
-
-class _RecordEditDialog extends StatefulWidget {
-  final MedicalRecords? record;
-
-  const _RecordEditDialog({this.record});
-
-  @override
-  __RecordEditDialogState createState() => __RecordEditDialogState();
-}
-
-class __RecordEditDialogState extends State<_RecordEditDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _visitDateController;
-  late TextEditingController _visitReasonController;
-  late TextEditingController _nextVisitDateController;
-  late TextEditingController _memoController;
-
-  @override
-  void initState() {
-    super.initState();
-    _visitDateController = TextEditingController(
-      text: widget.record?.visitedat == null
-          ? DateFormat('yyyy-MM-dd').format(DateTime.now())
-          : DateFormat('yyyy-MM-dd').format(widget.record!.visitedat!),
-    );
-    _visitReasonController = TextEditingController(
-      text: widget.record?.visitReason ?? '',
-    );
-    _nextVisitDateController = TextEditingController(
-      text: widget.record?.nextVisitat == null
-          ? ''
-          : DateFormat('yyyy-MM-dd').format(widget.record!.nextVisitat!),
-    );
-    _memoController = TextEditingController(text: widget.record?.memo ?? '');
-  }
-
-  @override
-  void dispose() {
-    _visitDateController.dispose();
-    _visitReasonController.dispose();
-    _nextVisitDateController.dispose();
-    _memoController.dispose();
-    super.dispose();
-  }
-
-  void _onSave() {
-    if (_formKey.currentState!.validate()) {
-      final newRecord = MedicalRecords(
-        id: widget.record?.id ?? Random().nextInt(10000).toString(),
-        visitedat: DateTime.parse(_visitDateController.text),
-        visitReason: _visitReasonController.text,
-        nextVisitat: _nextVisitDateController.text.isNotEmpty
-            ? DateTime.parse(_nextVisitDateController.text)
-            : null,
-        memo: _memoController.text,
-      );
-      Navigator.of(context).pop(newRecord);
-    }
-  }
-
-  Future<void> _selectDate(
-    BuildContext context,
-    TextEditingController controller,
-  ) async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: DateTime.tryParse(controller.text) ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (date != null) {
-      controller.text = DateFormat('yyyy-MM-dd').format(date);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.record == null ? '기록 추가' : '기록 수정'),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _visitDateController,
-                decoration: const InputDecoration(
-                  labelText: '방문일',
-                  icon: Icon(Icons.calendar_today),
-                ),
-                readOnly: true,
-                onTap: () => _selectDate(context, _visitDateController),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? '방문일을 입력하세요' : null,
-              ),
-              TextFormField(
-                controller: _visitReasonController,
-                decoration: const InputDecoration(
-                  labelText: '방문 이유',
-                  icon: Icon(Icons.medical_services_outlined),
-                ),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? '방문 이유를 입력하세요' : null,
-              ),
-              TextFormField(
-                controller: _nextVisitDateController,
-                decoration: const InputDecoration(
-                  labelText: '다음 방문 예정일 (선택)',
-                  icon: Icon(Icons.event_repeat),
-                ),
-                readOnly: true,
-                onTap: () => _selectDate(context, _nextVisitDateController),
-              ),
-              TextFormField(
-                controller: _memoController,
-                decoration: const InputDecoration(
-                  labelText: '메모',
-                  icon: Icon(Icons.note),
-                ),
-                maxLines: 3,
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('취소'),
-        ),
-        ElevatedButton(onPressed: _onSave, child: const Text('저장')),
-      ],
     );
   }
 }

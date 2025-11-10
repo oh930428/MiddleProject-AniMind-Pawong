@@ -1,14 +1,23 @@
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../domain/entities/medical_records.dart';
+import '../../domain/entities/pet.dart';
 
 class PetSupabaseDataSource {
   final SupabaseClient _client = Supabase.instance.client;
 
   Future<List<Pet>> getPets() async {
+    final userId = _client.auth.currentSession?.user.id;
+    if (userId == null) {
+      return [];
+    }
+
     final response = await _client
         .from('pets')
-        .select('*, breeds(*, species(*))');
+        .select('*, breeds(*, species(*))')
+        .eq('user_id', userId);
 
     if (response.isEmpty) {
       return [];
@@ -17,16 +26,62 @@ class PetSupabaseDataSource {
     return response.map((e) => Pet.fromJson(e)).toList();
   }
 
-  Future<void> addPet(Pet pet) async {
-    await _client.from('pets').insert(pet.toJson());
+  Future<String> _uploadImage(File imageFile, String petId) async {
+    final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final path = 'pet_images/$petId/$fileName';
+    await _client.storage.from('pets').upload(path, imageFile);
+    return _client.storage.from('pets').getPublicUrl(path);
   }
 
-  Future<void> updatePet(Pet pet) async {
-    await _client.from('pets').update(pet.toJson()).eq('id', pet.id);
+  Future<void> addPet(Pet pet, File? imageFile) async {
+    final userId = _client.auth.currentSession?.user.id;
+    if (userId == null) {
+      throw Exception('User not authenticated. Cannot add pet.');
+    }
+
+    final petData = pet.toJson();
+    petData['user_id'] = userId;
+
+    final insertedData = await _client
+        .from('pets')
+        .insert(petData)
+        .select('id')
+        .single();
+    final newPetId = insertedData['id'];
+
+    if (imageFile != null) {
+      final imageUrl = await _uploadImage(imageFile, newPetId);
+      await _client
+          .from('pets')
+          .update({'pet_image_url': imageUrl})
+          .eq('id', newPetId);
+    }
+  }
+
+  Future<void> updatePet(Pet pet, File? imageFile) async {
+    final userId = _client.auth.currentSession?.user.id;
+    if (userId == null) {
+      throw Exception('User not authenticated. Cannot update pet.');
+    }
+
+    final petData = pet.toJson();
+    if (imageFile != null) {
+      final imageUrl = await _uploadImage(imageFile, pet.id);
+      petData['pet_image_url'] = imageUrl;
+    }
+    await _client
+        .from('pets')
+        .update(petData)
+        .eq('id', pet.id)
+        .eq('user_id', userId);
   }
 
   Future<void> deletePet(String petId) async {
-    await _client.from('pets').delete().eq('id', petId);
+    final userId = _client.auth.currentSession?.user.id;
+    if (userId == null) {
+      throw Exception('User not authenticated. Cannot delete pet.');
+    }
+    await _client.from('pets').delete().eq('id', petId).eq('user_id', userId);
   }
 
   Future<List<MedicalRecords>> getMedicalRecords(String petId) async {
@@ -51,9 +106,9 @@ class PetSupabaseDataSource {
   }
 
   Future<void> addMedicalRecords(String petId, MedicalRecords record) async {
-    await _client
-        .from('medical_records')
-        .insert(record.toJson()..['pet_id'] = petId);
+    final recordData = record.toJson();
+    recordData['pet_id'] = petId;
+    await _client.from('medical_records').insert(recordData);
   }
 
   Future<void> updateMedicalRecords(String petId, MedicalRecords record) async {

@@ -1,16 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
-import 'package:middleproject_animind_pawong/features/pet/data/repogitories/pet_repository.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
-import 'package:middleproject_animind_pawong/features/pet/ui/medical_records_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/ui/pet_edit_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/ui/setting_screen.dart';
-import 'package:middleproject_animind_pawong/features/pet/widgets/info_grid_card.dart';
 import 'package:middleproject_animind_pawong/features/pet/widgets/medical_records_item.dart';
-import 'package:middleproject_animind_pawong/features/pet/widgets/pet_switcher_tab.dart';
-import 'package:middleproject_animind_pawong/features/pet/widgets/profile_card.dart';
-import 'package:middleproject_animind_pawong/features/pet/widgets/profile_section_header.dart';
+
+import '../../../core/theme/app_colors.dart';
+import '../data/repogitories/pet_repository.dart';
+import '../domain/entities/medical_records.dart';
+import '../domain/entities/pet.dart';
+import '../widgets/info_grid_card.dart';
+import '../widgets/pet_switcher_tab.dart';
+import '../widgets/profile_card.dart';
+import '../widgets/profile_section_header.dart';
+import 'medical_records_screen.dart';
+import 'pet_edit_screen.dart';
+import 'setting_screen.dart';
 
 // 반려동물 프로필을 보여주는 메인 화면
 class PetProfileScreen extends StatefulWidget {
@@ -55,11 +58,13 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
       context,
     ).push(MaterialPageRoute(builder: (context) => PetEditScreen(pet: pet)));
 
-    if (result != null && result is Pet) {
+    if (result != null && result is Map) {
+      final Pet petResult = result['pet'];
+      final File? imageFile = result['image'];
       if (pet == null) {
-        await _repo.addPet(result);
+        await _repo.addPet(petResult, imageFile);
       } else {
-        await _repo.updatePet(result);
+        await _repo.updatePet(petResult, imageFile);
       }
       _loadPets();
     }
@@ -81,14 +86,20 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('정보 삭제 확인'),
-          content: Text('${_selectedPet!.name}의 모든 정보를 삭제하시겠습니까?'),
+          title: const Text('반려동물 정보 삭제'),
+          content: Text(
+            '정말 ${_selectedPet!.name}의 모든 정보를 삭제하시겠습니까? \n 삭제된 정보는 복구할 수 없습니다',
+          ),
           actions: <Widget>[
-            TextButton(
+            OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.grey.shade700, width: 2),
+                foregroundColor: Colors.black,
+              ),
               child: const Text('취소'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () async {
                 final petName = _selectedPet!.name;
                 await _repo.deletePet(_selectedPet!.id);
@@ -102,10 +113,11 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                 );
                 _loadPets();
               },
-              child: Text(
-                '삭제',
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: Colors.white,
               ),
+              child: const Text('삭제'),
             ),
           ],
         );
@@ -129,6 +141,11 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
           ),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () {},
+          tooltip: '뒤로가기',
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
