@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:middleproject_animind_pawong/features/home/domain/entities/post_item.dart';
+import 'package:middleproject_animind_pawong/features/posts/presentation/ui/post_detail_screen.dart';
 import 'package:provider/provider.dart';
+import 'home_shell.dart';
 
 // ViewModel
 import '../../features/auth/domain/viewmodel/auth_viewmodel.dart';
-import '../../features/auth/ui/signup_screen.dart';
-import '../../features/auth/ui/social_login_screen.dart';
-import '../../features/faq/ui/faq_screen.dart';
-import '../../features/home/presentation/ui/home_screen.dart';
-import '../../features/notification/ui/notification_screen.dart';
+
+// UI
+import '../../features/splash/ui/splash_screen.dart';
 import '../../features/onboarding/ui/onboarding_first_screen.dart';
 import '../../features/onboarding/ui/onboarding_fourth_screen.dart';
 import '../../features/onboarding/ui/onboarding_second_screen.dart';
 import '../../features/onboarding/ui/onboarding_third_screen.dart';
+import '../../features/auth/ui/social_login_screen.dart';
+import '../../features/auth/ui/signup_screen.dart';
+import '../../features/home/presentation/ui/home_screen.dart';
+import '../../features/posts/presentation/ui/post_screen.dart';
+import '../../features/faq/ui/faq_screen.dart';
 import '../../features/pet/ui/pet_profile_screen.dart';
-// UI
-import '../../features/splash/ui/splash_screen.dart';
-import 'home_shell.dart';
+import '../../features/notification/ui/notification_screen.dart';
 
 GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
@@ -60,6 +64,19 @@ GoRouter createRouter(BuildContext context) {
         builder: (_, __, child) => HomeShell(child: child),
         routes: [
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+          GoRoute(
+            path: '/posts',
+            builder: (_, __) => const PostScreen(),
+            routes: [
+              GoRoute(
+                path: ":post_id",
+                builder: (_, state) {
+                  final postItem = state.extra as PostItem;
+                  return PostDetailScreen(postItem: postItem);
+                },
+              ),
+            ],
+          ),
           GoRoute(path: '/faq', builder: (_, __) => const FaqScreen()),
           GoRoute(
             path: '/notification',

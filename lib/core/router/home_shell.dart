@@ -21,12 +21,15 @@ class HomeShell extends StatelessWidget {
               context.go('/home');
               break;
             case 1:
-              context.go('/profile');
+              context.go('/posts');
               break;
             case 2:
-              context.go('/faq');
+              context.go('/profile');
               break;
             case 3:
+              context.go('/faq');
+              break;
+            case 4:
               context.go('/notification');
               break;
           }
@@ -37,6 +40,7 @@ class HomeShell extends StatelessWidget {
         type: BottomNavigationBarType.fixed, // 4개 이상일 때 안정적
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: '검색'),
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: '프로필'),
           BottomNavigationBarItem(
             icon: Icon(Icons.question_mark),
@@ -50,9 +54,10 @@ class HomeShell extends StatelessWidget {
 
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/profile')) return 1;
-    if (location.startsWith('/faq')) return 2;
-    if (location.startsWith('/notification')) return 3;
+    if (location.startsWith('/posts')) return 1;
+    if (location.startsWith('/profile')) return 2;
+    if (location.startsWith('/faq')) return 3;
+    if (location.startsWith('/notification')) return 4;
 
     return 0;
   }
