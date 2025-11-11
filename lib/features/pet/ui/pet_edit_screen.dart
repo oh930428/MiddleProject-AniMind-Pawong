@@ -22,7 +22,7 @@ class _PetEditScreenState extends State<PetEditScreen> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameController;
-  late TextEditingController _sexController;
+  String? _selectedGender;
   late TextEditingController _birthdateController;
   late TextEditingController _weightController;
   late TextEditingController _imageUrlController;
@@ -42,7 +42,7 @@ class _PetEditScreenState extends State<PetEditScreen> {
     super.initState();
 
     _nameController = TextEditingController(text: widget.pet?.name ?? "");
-    _sexController = TextEditingController(text: widget.pet?.gender ?? "");
+    _selectedGender = widget.pet?.gender;
     _birthdateController = TextEditingController(
       text: widget.pet?.birthDate != null
           ? DateFormat('yyyy-MM-dd').format(widget.pet!.birthDate!)
@@ -155,7 +155,7 @@ class _PetEditScreenState extends State<PetEditScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _sexController.dispose();
+
     _birthdateController.dispose();
     _weightController.dispose();
     _imageUrlController.dispose();
@@ -205,7 +205,7 @@ class _PetEditScreenState extends State<PetEditScreen> {
         breeds_name: selectedBreedName,
         breedId: _selectedBreedId,
         age: age,
-        gender: _sexController.text,
+        gender: _selectedGender ?? '',
         birthDate: birthDate,
         weight: double.tryParse(_weightController.text) ?? 0.0,
         imageUrl: _pickedImage?.path ?? _imageUrlController.text,
@@ -215,6 +215,21 @@ class _PetEditScreenState extends State<PetEditScreen> {
         records: widget.pet?.records ?? [],
       );
       Navigator.of(context).pop({'pet': newPet, 'image': _pickedImage});
+    }
+  }
+
+  Future<void> _selectDate(
+    BuildContext context,
+    TextEditingController controller,
+  ) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(controller.text) ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (date != null) {
+      controller.text = DateFormat('yyyy-MM-dd').format(date);
     }
   }
 
@@ -373,16 +388,60 @@ class _PetEditScreenState extends State<PetEditScreen> {
                               },
                             ),
                             const SizedBox(height: 16),
-                            _buildTextFormField(
-                              controller: _sexController,
-                              labelText: '성별',
-                              icon: Icons.wc,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 12.0,
+                                    bottom: 8.0,
+                                  ),
+                                  child: Text(
+                                    '성별',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text('남아'),
+                                        value: '남아',
+                                        groupValue: _selectedGender,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            _selectedGender = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text('여아'),
+                                        value: '여아',
+                                        groupValue: _selectedGender,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            _selectedGender = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 16),
                             _buildTextFormField(
                               controller: _birthdateController,
                               labelText: '생일 (YYYY-MM-DD)',
                               icon: Icons.calendar_today,
+                              readOnly: true,
+                              onTap: () =>
+                                  _selectDate(context, _birthdateController),
                             ),
                             const SizedBox(height: 16),
                             _buildTextFormField(
@@ -421,10 +480,16 @@ class _PetEditScreenState extends State<PetEditScreen> {
     required String labelText,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
+    bool readOnly = false,
+    int? maxLines = 1,
+    VoidCallback? onTap,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      readOnly: readOnly,
+      maxLines: maxLines,
+      onTap: onTap,
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: Icon(icon, color: AppColors.primary),
