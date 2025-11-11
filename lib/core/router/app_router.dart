@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/features/home/domain/entities/post_item.dart';
+import 'package:middleproject_animind_pawong/features/posts/presentation/ui/post_add_screen.dart';
 import 'package:middleproject_animind_pawong/features/posts/presentation/ui/post_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'home_shell.dart';
@@ -68,6 +69,13 @@ GoRouter createRouter(BuildContext context) {
             path: '/posts',
             builder: (_, __) => const PostScreen(),
             routes: [
+              GoRoute(
+                path: "/add",
+                builder: (_, state) {
+                  final postItem = state.extra as PostItem?;
+                  return PostAddScreen(postItem: postItem);
+                },
+              ),
               GoRoute(
                 path: ":post_id",
                 builder: (_, state) {
