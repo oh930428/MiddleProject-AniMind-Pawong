@@ -3,20 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// 설정 화면 위젯
+// 설정 화면 위젯 (이미지 기반 구현)
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    Future<void> _changeOrnboardingStatus() async {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('onboarding_status', false);
-    }
+    final authViewModel = Provider.of<AuthViewModel>(context);
+    final userEmail = authViewModel.userEmail;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4.0),
@@ -44,27 +40,28 @@ class SettingsScreen extends StatelessWidget {
             _buildSectionCard(
               theme,
               title: '반려인',
-              child: const ListTile(
+              child: ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(
                   radius: 24,
                   backgroundColor: AppColors.primaryContainer,
                   child: Text(
-                    '반',
-                    style: TextStyle(
+                    userEmail?.isNotEmpty == true
+                        ? userEmail![0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 title: Text(
-                  'user@google.com',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  userEmail ?? '로그인 정보 없음',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
-                subtitle: Text('구글 로그인'),
+                subtitle: const Text('구글 로그인'),
               ),
             ),
-
             const SizedBox(height: AppLayout.sectionSpacing),
 
             // ------------------------------------
@@ -95,9 +92,8 @@ class SettingsScreen extends StatelessWidget {
                     title: '로그아웃',
                     subtitle: '다른 계정으로 로그인하기',
                     onTap: () async {
-                      await context.read<AuthViewModel>().logOut();
-                      _showActionSnackbar(context, '로그아웃이 되었습니다.');
-                      context.go("/splash");
+                      await authViewModel.logOut();
+                      context.go('/');
                     },
                   ),
                   Divider(
@@ -111,9 +107,8 @@ class SettingsScreen extends StatelessWidget {
                     title: '온보딩 다시 보기',
                     subtitle: '앱 소개를 다시 확인합니다',
                     isLast: true,
-                    onTap: () async {
+                    onTap: () {
                       // TODO: 온보딩 화면으로 이동
-                      await _changeOrnboardingStatus();
                       _showActionSnackbar(context, '온보딩 재시작 기능이 호출되었습니다.');
                     },
                   ),
@@ -227,10 +222,9 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  // 임시 액션 스낵바
   void _showActionSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: const Duration(seconds: 1)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
