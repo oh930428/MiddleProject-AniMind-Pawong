@@ -99,17 +99,4 @@ class FaqViewModel {
       throw Exception('Unexpected error: $e');
     }
   }
-
-  //debounce, throttle
-  Future<List<FAQ>> searchFAQs({
-    required String query,
-    String? category,
-  }) async {
-    return _fetchFAQs(
-      limit: initialLoadCount,
-      offset: 0,
-      category: category,
-      searchQuery: query,
-    );
-  }
 }
