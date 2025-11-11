@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 
 import '../../../home/domain/entities/post_item.dart';
@@ -12,6 +13,34 @@ class PostDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textScaler = MediaQuery.textScalerOf(context);
+
+    void _deleteRecord(PostItem postItem) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('게시글 삭제'),
+          content: const Text('정말 이 게시글을 삭제하시겠습니까?\n삭제된 기록은 복구할 수 없습니다'),
+          actions: [
+            OutlinedButton(
+              onPressed: () => context.pop(),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.grey.shade700, width: 2),
+                foregroundColor: Colors.black,
+              ),
+              child: const Text('취소'),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('삭제'),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -28,11 +57,10 @@ class PostDetailScreen extends StatelessWidget {
             icon: const Icon(Icons.more_vert), // ⋮ 세로 점 3개
             onSelected: (value) {
               if (value == 'edit') {
-                print('수정 클릭됨');
-                // 수정 로직 추가
-              } else if (value == 'delete') {
-                print('삭제 클릭됨');
-                // 삭제 로직 추가
+                context.push("/posts/add");
+              }
+              if (value == 'delete') {
+                _deleteRecord(postItem);
               }
             },
             itemBuilder: (context) => [

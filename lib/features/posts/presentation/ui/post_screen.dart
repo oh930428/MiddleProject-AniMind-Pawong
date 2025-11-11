@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 
 import '../../../home/domain/entities/post_item.dart';
@@ -197,6 +198,10 @@ class PostScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push("/posts/add"),
+        child: const Icon(Icons.add),
       ),
     );
   }
