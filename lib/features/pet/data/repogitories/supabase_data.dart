@@ -50,12 +50,12 @@ class PetSupabaseDataSource {
     if (imageFile != null) {
       final imageUrl = await _uploadImage(
         imageFile,
-        insertedData['id'] as String,
+        insertedData['id'].toString(),
       );
       final updatedData = await _client
           .from('pets')
           .update({'pet_image_url': imageUrl})
-          .eq('id', insertedData['id'] as String)
+          .eq('id', insertedData['id'].toString())
           .select('*, breeds(*, species(*))')
           .single();
       return Pet.fromJson(updatedData);
@@ -128,10 +128,13 @@ class PetSupabaseDataSource {
     if (userId == null) {
       throw Exception('User not authenticated. Cannot update medical record.');
     }
+    if (record.id == null) {
+      throw Exception('Record ID cannot be null for an update.');
+    }
     await _client
         .from('medical_records')
         .update(record.toJson())
-        .eq('id', record.id)
+        .eq('id', record.id!)
         .eq('user_id', userId);
   }
 

@@ -35,12 +35,42 @@ class PetRepository {
     return petsWithInfo;
   }
 
-  Future<void> addPet(Pet pet, File? imageFile) {
-    return _dataSource.addPet(pet, imageFile);
+  Future<Pet> addPet(Pet pet, File? imageFile) async {
+    final newPet = await _dataSource.addPet(pet, imageFile);
+    return newPet.copyWith(
+      infoGridData: [
+        {'label': '종', 'value': newPet.species_name},
+        {'label': '품종', 'value': newPet.breeds_name},
+        {'label': '나이', 'value': '${newPet.age} 살'},
+        {'label': '성별', 'value': newPet.gender},
+        {
+          'label': '생일',
+          'value': newPet.birthDate != null
+              ? DateFormat('yyyy-MM-dd').format(newPet.birthDate!)
+              : '미상',
+        },
+        {'label': '체중', 'value': '${newPet.weight ?? '미상'} kg'},
+      ],
+    );
   }
 
-  Future<void> updatePet(Pet pet, File? imageFile) {
-    return _dataSource.updatePet(pet, imageFile);
+  Future<Pet> updatePet(Pet pet, File? imageFile) async {
+    final updatedPet = await _dataSource.updatePet(pet, imageFile);
+    return updatedPet.copyWith(
+      infoGridData: [
+        {'label': '종', 'value': updatedPet.species_name},
+        {'label': '품종', 'value': updatedPet.breeds_name},
+        {'label': '나이', 'value': '${updatedPet.age} 살'},
+        {'label': '성별', 'value': updatedPet.gender},
+        {
+          'label': '생일',
+          'value': updatedPet.birthDate != null
+              ? DateFormat('yyyy-MM-dd').format(updatedPet.birthDate!)
+              : '미상',
+        },
+        {'label': '체중', 'value': '${updatedPet.weight ?? '미상'} kg'},
+      ],
+    );
   }
 
   Future<void> deletePet(String petId) {
