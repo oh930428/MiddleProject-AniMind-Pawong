@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../viewmodel/faq_viewmodel.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
 
 class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
@@ -13,6 +14,7 @@ class FaqScreen extends StatefulWidget {
 class _FaqScreenState extends State<FaqScreen> {
   final FaqViewModel _viewModel = FaqViewModel();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
 
   String selectedCategory = '전체';
   int? expandedIndex;
@@ -24,16 +26,22 @@ class _FaqScreenState extends State<FaqScreen> {
   bool hasAdditional = true;
   String? errorMessage;
 
+  Timer? _debounceTimer;
+  static const int searchThreshold = 800; //ms
+
   @override
   void initState() {
     super.initState();
     _loadInitialFAQs();
     _scrollController.addListener(_onScroll);
+    _searchController.addListener(_onSearchTextChanged);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -45,6 +53,27 @@ class _FaqScreenState extends State<FaqScreen> {
         hasAdditional) {
       _loadAdditionalFAQs();
     }
+  }
+
+  void _onSearchTextChanged() {
+    setState(() {}); //xicon
+
+    _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(const Duration(milliseconds: searchThreshold), () {
+      final newQuery = _searchController.text.trim();
+      if (searchQuery != newQuery) {
+        setState(() {
+          searchQuery = newQuery;
+          expandedIndex = null;
+        });
+        _loadInitialFAQs();
+      }
+    });
+  }
+
+  void _clearSearch() {
+    _searchController.clear(); //_onSearchTextChanged
   }
 
   Future<void> _loadInitialFAQs() async {
@@ -122,14 +151,6 @@ class _FaqScreenState extends State<FaqScreen> {
     _loadInitialFAQs();
   }
 
-  void _onSearchChanged(String value) {
-    setState(() {
-      searchQuery = value.trim();
-      expandedIndex = null;
-    });
-    _loadInitialFAQs();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,9 +160,9 @@ class _FaqScreenState extends State<FaqScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios_new,
             color: Colors.black,
-          ), //arrow_back_ios_new
+          ), //arrow_back
           onPressed: () => context.pop(),
         ),
         title: const Text(
@@ -164,11 +185,17 @@ class _FaqScreenState extends State<FaqScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
-                onChanged: _onSearchChanged,
-                decoration: const InputDecoration(
+                controller: _searchController,
+                decoration: InputDecoration(
                   hintText: '궁금한 내용을 검색해보세요',
                   hintStyle: TextStyle(color: Colors.white, fontSize: 14),
                   prefixIcon: Icon(Icons.search, color: Colors.white),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.white),
+                          onPressed: _clearSearch,
+                        )
+                      : null,
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16,
@@ -238,67 +265,93 @@ class _FaqScreenState extends State<FaqScreen> {
 
         final faq = faqs[index];
         final isExpanded = expandedIndex == index;
-
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                expandedIndex = isExpanded ? null : index;
-              });
-            },
-            splashColor: AppColors.lightGrey,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.lightGrey, width: 1.5),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Q',
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.primary, width: 1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      expandedIndex = isExpanded ? null : index;
+                    });
+                  },
+                  splashColor: AppColors.lightGrey,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(11),
+                        topRight: Radius.circular(11),
+                        bottomLeft: isExpanded
+                            ? Radius.zero
+                            : Radius.circular(11),
+                        bottomRight: isExpanded
+                            ? Radius.zero
+                            : Radius.circular(11),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Q',
+                              style: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          faq.question,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            faq.question,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                         ),
-                      ),
-                      Icon(
-                        isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        color: Colors.grey,
-                      ),
-                    ],
+                        Icon(
+                          isExpanded
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
                   ),
-                  if (isExpanded) const SizedBox(height: 16),
-                  if (isExpanded)
-                    Row(
+                ),
+
+                if (isExpanded)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.lightGrey,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(11),
+                        bottomRight: Radius.circular(11),
+                      ),
+                    ),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
@@ -333,8 +386,8 @@ class _FaqScreenState extends State<FaqScreen> {
                         ),
                       ],
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         );
