@@ -1,6 +1,6 @@
 // 병원 기록 정보를 담는 클래스
 class MedicalRecords {
-  final String id;
+  final String? id;
   final String? userId;
   final DateTime? visitedat;
   final String visitReason;
@@ -8,7 +8,7 @@ class MedicalRecords {
   final String memo;
 
   MedicalRecords({
-    required this.id,
+    this.id,
     this.userId,
     required this.visitedat,
     required this.visitReason,
@@ -19,7 +19,7 @@ class MedicalRecords {
   factory MedicalRecords.fromJson(Map<String, dynamic> json) {
     print('Parsing HospitalRecord from JSON: $json');
     return MedicalRecords(
-      id: json['id']?.toString() ?? '',
+      id: json['id']?.toString(),
       userId: json['user_id']?.toString(),
       visitedat: json['visited_at'] != null
           ? DateTime.tryParse(json['visited_at'].toString())
@@ -33,13 +33,14 @@ class MedicalRecords {
   }
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{
-      'id': id,
-      'visited_at': visitedat?.toIso8601String(),
-      'visit_reason': visitReason,
-      'next_visit_at': nextVisitat?.toIso8601String(),
-      'memo': memo,
-    };
+    final map = <String, dynamic>{};
+    if (id != null) {
+      map['id'] = id;
+    }
+    map['visited_at'] = visitedat?.toIso8601String();
+    map['visit_reason'] = visitReason;
+    map['next_visit_at'] = nextVisitat?.toIso8601String();
+    map['memo'] = memo;
     if (userId != null) {
       map['user_id'] = userId;
     }
