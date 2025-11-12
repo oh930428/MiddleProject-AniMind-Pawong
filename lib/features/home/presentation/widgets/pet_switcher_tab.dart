@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:middleproject_animind_pawong/features/home/domain/entities/home_pet.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../pet/domain/entities/pet.dart';
 
 class PetSwitcherTab extends StatelessWidget {
-  final List<Pet> pets;
+  final List<HomePet> pets;
   final int selectedIndex;
   final ValueChanged<int> onSelect;
 
@@ -44,7 +45,7 @@ class PetSwitcherTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
-                  pet.name,
+                  pet.petName,
                   style: TextStyle(
                     color: isSelected ? Colors.white : Colors.black87,
                     fontWeight: isSelected
