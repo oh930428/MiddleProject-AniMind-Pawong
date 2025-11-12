@@ -1,21 +1,22 @@
 class PostItem {
-  final String id;
-  final String post_type;
+  final int id;
+  final String postType;
   final String title;
   final String content;
   final String species;
   final String breeds;
   final String gender;
-  final String birth;
+  final DateTime birth;
   final String weight;
-  final String image_url;
-  final String? created_at;
-  final String? updated_at;
-  final String? deleted_at;
+  final String? imageUrl;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
+  final String userName;
 
   PostItem({
     required this.id,
-    required this.post_type,
+    required this.postType,
     required this.title,
     required this.content,
     required this.species,
@@ -23,47 +24,52 @@ class PostItem {
     required this.gender,
     required this.birth,
     required this.weight,
-    required this.image_url,
-    this.created_at,
-    this.updated_at,
-    this.deleted_at,
+    this.imageUrl,
+    required this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    required this.userName,
   });
 
-  /// ✅ JSON → PostItem 변환
   factory PostItem.fromJson(Map<String, dynamic> json) {
     return PostItem(
-      id: json["id"]?.toString() ?? "",
-      post_type: json["post_type"] ?? "",
-      title: json["title"] ?? "",
-      content: json["content"] ?? "",
-      species: json["species"] ?? "",
-      breeds: json["breeds"] ?? "",
-      gender: json["gender"] ?? "",
-      birth: json["birth"] ?? "",
-      weight: json["weight"]?.toString() ?? "",
-      image_url: json["image_url"] ?? "",
-      created_at: json["created_at"] ?? "",
-      updated_at: json["updated_at"],
-      deleted_at: json["deleted_at"],
+      id: json['id'],
+      postType: json['post_type'],
+      title: json['title'],
+      content: json['content'],
+      species: json['species'],
+      breeds: json['breeds'],
+      gender: json['gender'],
+      birth: DateTime.parse(json['birth']),
+      weight: json['weight'],
+      imageUrl: json['image_url'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'])
+          : null,
+      userName: json['users']?['name'],
     );
   }
 
-  /// ✅ PostItem → JSON 변환 (업로드용)
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
-      "post_type": post_type,
-      "title": title,
-      "content": content,
-      "species": species,
-      "breeds": breeds,
-      "gender": gender,
-      "birth": birth,
-      "weight": weight,
-      "image_url": image_url,
-      "created_at": created_at,
-      "updated_at": updated_at,
-      "deleted_at": deleted_at,
+      'id': id,
+      'post_type': postType,
+      'title': title,
+      'content': content,
+      'species': species,
+      'breeds': breeds,
+      'gender': gender,
+      'birth': birth.toIso8601String(),
+      'weight': weight,
+      'image_url': imageUrl,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+      'deleted_at': deletedAt?.toIso8601String(),
+      'user_name': userName,
     };
   }
 }
