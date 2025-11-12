@@ -22,7 +22,7 @@ import '../../features/pet/ui/medical_records_screen.dart';
 import '../../features/pet/ui/pet_edit_screen.dart';
 import '../../features/pet/ui/pet_profile_screen.dart';
 import '../../features/pet/ui/setting_screen.dart';
-import '../../features/posts/presentation/ui/post_screen.dart';
+import '../../features/posts/presentation/ui/posts_screen.dart';
 // UI
 import '../../features/splash/ui/splash_screen.dart';
 import 'home_shell.dart';
@@ -71,7 +71,7 @@ GoRouter createRouter(BuildContext context) {
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
           GoRoute(
             path: '/posts',
-            builder: (_, __) => const PostScreen(),
+            builder: (_, __) => const PostsScreen(),
             routes: [
               GoRoute(
                 path: ":post_id",

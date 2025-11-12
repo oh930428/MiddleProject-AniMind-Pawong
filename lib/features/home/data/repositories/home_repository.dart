@@ -34,7 +34,6 @@ class HomeRepository {
       final posts = await homeSupabaseDataSource.getPostsWithDio(
         userId: userId,
       );
-      print(posts);
       return posts;
     } catch (e) {
       print("🚨 HomeRepository.getPosts 에러: $e");

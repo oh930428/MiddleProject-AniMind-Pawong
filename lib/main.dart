@@ -7,7 +7,8 @@ import 'core/router/app_router.dart';
 import 'features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'features/home/data/datasources/home_supabase_data.dart';
 import 'features/home/data/repositories/home_repository.dart';
-import 'features/pet/domain/viewmodel/setting_viewmodel.dart';
+import 'features/posts/data/datasources/posts_supabase_data.dart';
+import 'features/posts/data/repositories/posts_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ void main() async {
     MultiProvider(
       providers: [
         Provider(create: (_) => HomeRepository(HomeSupabaseDataSource())),
+        Provider(create: (_) => PostsRepository(PostsSupabaseDataSource())),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => SettingViewModel()),
       ],
