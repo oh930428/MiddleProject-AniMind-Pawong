@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../viewmodel/faq_viewmodel.dart';
+import '../domain/viewmodel/faq_viewmodel.dart';
+import '../domain/entities/faq.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
