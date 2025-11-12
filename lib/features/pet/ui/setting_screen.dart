@@ -4,22 +4,38 @@ import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-// 설정 화면 위젯 (이미지 기반 구현)
-class SettingsScreen extends StatelessWidget {
+import '../domain/viewmodel/setting_viewmodel.dart';
+
+// 설정 화면 위젯
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SettingViewModel>(context, listen: false).loadUserEmail();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final authViewModel = Provider.of<AuthViewModel>(context);
-    final userEmail = authViewModel.userEmail;
+    final settingViewModel = Provider.of<SettingViewModel>(context);
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    final userEmail = settingViewModel.userEmail;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('설정', style: theme.textTheme.headlineSmall),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
         bottom: PreferredSize(
@@ -31,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppLayout.horizontalPadding),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // ------------------------------------
@@ -40,29 +56,31 @@ class SettingsScreen extends StatelessWidget {
             _buildSectionCard(
               theme,
               title: '반려인',
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 24,
-                  backgroundColor: AppColors.primaryContainer,
-                  child: Text(
-                    userEmail?.isNotEmpty == true
-                        ? userEmail![0].toUpperCase()
-                        : '?',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
+              child: settingViewModel.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: CircleAvatar(
+                        radius: 24,
+                        backgroundColor: AppColors.primaryContainer,
+                        child: Text(
+                          userEmail?.isNotEmpty == true
+                              ? userEmail![0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        userEmail ?? '이메일을 불러오지 못했습니다.',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: const Text('구글 로그인'),
                     ),
-                  ),
-                ),
-                title: Text(
-                  userEmail ?? '로그인 정보 없음',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                subtitle: const Text('구글 로그인'),
-              ),
             ),
-            const SizedBox(height: AppLayout.sectionSpacing),
+            const SizedBox(height: 24.0),
 
             // ------------------------------------
             // 2. 앱 정보 카드
@@ -77,7 +95,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppLayout.sectionSpacing),
+            const SizedBox(height: 24.0),
 
             // ------------------------------------
             // 3. 기능 카드 (로그아웃, 온보딩)
@@ -93,7 +111,9 @@ class SettingsScreen extends StatelessWidget {
                     subtitle: '다른 계정으로 로그인하기',
                     onTap: () async {
                       await authViewModel.logOut();
-                      context.go('/');
+                      if (mounted) {
+                        context.go('/');
+                      }
                     },
                   ),
                   Divider(
