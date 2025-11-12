@@ -104,6 +104,17 @@ class _MyPetListSectionState extends State<_MyPetListSection> {
             : Column(
                 spacing: AppLayout.elementSpacing,
                 children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '나의 반려동물',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+
                   PetSwitcherTab(
                     pets: pets,
                     selectedIndex: selectedPetIndex,
