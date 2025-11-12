@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'package:middleproject_animind_pawong/features/pet/data/repogitories/supabase_data.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
 import 'package:middleproject_animind_pawong/features/pet/domain/entities/pet.dart';
+
+import '../datasources/pet_supabase_data.dart';
 
 class PetRepository {
   final PetSupabaseDataSource _dataSource = PetSupabaseDataSource();

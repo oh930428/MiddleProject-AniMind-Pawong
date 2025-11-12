@@ -7,6 +7,7 @@ import 'core/router/app_router.dart';
 import 'features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'features/home/data/datasources/home_supabase_data.dart';
 import 'features/home/data/repositories/home_repository.dart';
+import 'features/pet/domain/viewmodel/setting_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ void main() async {
       providers: [
         Provider(create: (_) => HomeRepository(HomeSupabaseDataSource())),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => SettingViewModel()),
       ],
       child: const MyApp(),
     ),
