@@ -5,6 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/router/app_router.dart';
 import 'features/auth/domain/viewmodel/auth_viewmodel.dart';
+import 'features/home/data/datasources/home_supabase_data.dart';
+import 'features/home/data/repositories/home_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +18,10 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
+      providers: [
+        Provider(create: (_) => HomeRepository(HomeSupabaseDataSource())),
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+      ],
       child: const MyApp(),
     ),
   );

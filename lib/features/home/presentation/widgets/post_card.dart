@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../domain/entities/post_item.dart';
+import '../../domain/entities/home_posts.dart';
 
 class PostCard extends StatelessWidget {
-  final PostItem postItem;
+  final HomePost recentPost;
 
-  const PostCard({super.key, required this.postItem});
+  const PostCard({super.key, required this.recentPost});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push("/posts/${postItem.id}", extra: postItem);
+        context.push("/posts/${recentPost.id}", extra: recentPost);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -39,7 +39,7 @@ class PostCard extends StatelessWidget {
                   const CircleAvatar(child: Icon(Icons.person)),
                   const SizedBox(width: 8),
                   Text(
-                    "${postItem.user_id} · ${postItem.created_at}",
+                    "${recentPost.userName} · ${recentPost.createdAt.year}-${recentPost.createdAt.month.toString().padLeft(2, '0')}-${recentPost.createdAt.day.toString().padLeft(2, '0')}",
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ],
@@ -52,7 +52,7 @@ class PostCard extends StatelessWidget {
                 children: [
                   Chip(
                     label: Text(
-                      postItem.post_type,
+                      recentPost.postType,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -71,7 +71,7 @@ class PostCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "${postItem.species} · ${postItem.breeds}",
+                    "${recentPost.species} · ${recentPost.breeds}",
                     style: const TextStyle(color: Colors.black54),
                   ),
                 ],
@@ -80,16 +80,19 @@ class PostCard extends StatelessWidget {
               const SizedBox(height: 8),
 
               // 게시글 제목
-              const Text(
-                "고양이가 밥을 안 먹어요",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                recentPost.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
               const SizedBox(height: 6),
 
               // 게시글 내용
-              const Text(
-                "첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !!",
+              Text(
+                recentPost.content,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 14, color: Colors.black87),
@@ -102,11 +105,15 @@ class PostCard extends StatelessWidget {
                 height: 300,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    postItem.image_url,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  child:
+                      recentPost.imageUrl == null ||
+                          recentPost.imageUrl!.isEmpty
+                      ? const Icon(Icons.pets, size: 80, color: Colors.grey)
+                      : Image.network(
+                          recentPost.imageUrl!,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ],
