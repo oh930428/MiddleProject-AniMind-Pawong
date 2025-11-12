@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
-import '../domain/viewmodel/faq_viewmodel.dart';
-import '../domain/entities/faq.dart';
-import 'package:go_router/go_router.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_colors.dart';
+import '../domain/entities/faq.dart';
+import '../domain/viewmodel/faq_viewmodel.dart';
 
 class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
@@ -159,13 +160,6 @@ class _FaqScreenState extends State<FaqScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.black,
-          ), //arrow_back
-          onPressed: () => context.pop(),
-        ),
         title: const Text(
           '자주 묻는 질문',
           style: TextStyle(
