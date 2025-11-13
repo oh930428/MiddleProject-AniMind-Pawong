@@ -207,7 +207,7 @@ class _RecentPostList extends StatelessWidget {
 
         // 내가 작성한 게시글 카드
         SizedBox(
-          height: 560, // 카드 높이
+          height: 160, // 카드 높이
           child: recentPost.isEmpty
               ? const Center(child: Text("내가 작성한 게시글이 없습니다."))
               : ListView.builder(

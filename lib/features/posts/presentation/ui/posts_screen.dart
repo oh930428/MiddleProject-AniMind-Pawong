@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/features/posts/data/repositories/posts_repository.dart';
-import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../home/presentation/viewmodel/home_viewmodel.dart';
 import '../../../home/presentation/widgets/post_card.dart';
+import '../../data/repositories/posts_repository.dart';
+import '../../domain/viewmodel/posts_viewmodel.dart';
 import '../widgets/filter_section.dart';
 
 class PostsScreen extends StatelessWidget {
