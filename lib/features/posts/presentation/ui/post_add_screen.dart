@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:middleproject_animind_pawong/features/home/domain/entities/home_posts.dart';
-import 'package:middleproject_animind_pawong/features/home/domain/entities/post_item.dart';
 import 'package:middleproject_animind_pawong/features/posts/data/repositories/posts_repository.dart';
 import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -82,28 +81,6 @@ class _PostsBodyState extends State<_PostsBody> {
     super.dispose();
   }
 
-  // ImageProvider? _getImageProvider() {
-  //   if (_pickedImage != null) {
-  //     return FileImage(_pickedImage!);
-  //   } else if (_imageUrl != null && _imageUrl!.isNotEmpty) {
-  //     return NetworkImage(_imageUrl!);
-  //   }
-  //   return null;
-  // }
-  //
-  // Future<void> _pickImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _pickedImage = File(pickedFile.path);
-  //       _imageUrl = pickedFile.path;
-  //       _imageUrlController.text = pickedFile.path;
-  //     });
-  //   }
-  // }
-
   ImageProvider? _getImageProvider() {
     if (_pickedImage != null) return FileImage(_pickedImage!);
     if (_imageUrl != null && _imageUrl!.isNotEmpty) {
@@ -162,6 +139,7 @@ class _PostsBodyState extends State<_PostsBody> {
               birth: _birthController.text,
               weight: _weightController.text,
               imageUrl: _imageUrlController.text,
+              imageFile: _pickedImage,
             );
           } else {
             await context.read<PostsViewModel>().updatePosts(
@@ -174,7 +152,8 @@ class _PostsBodyState extends State<_PostsBody> {
               gender: _selectedGender,
               birth: _birthController.text,
               weight: _weightController.text,
-              // imageUrl: _imageUrlController.text,
+              imageUrl: _imageUrlController.text,
+              imageFile: _pickedImage,
             );
           }
           context.go("/posts");
