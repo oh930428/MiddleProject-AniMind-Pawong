@@ -125,7 +125,7 @@ class _SettingsScreenViewState extends State<_SettingsScreenView> {
                     onTap: () async {
                       await authViewModel.logOut();
                       if (mounted) {
-                        context.go('/');
+                        context.go('/splash');
                       }
                     },
                   ),
