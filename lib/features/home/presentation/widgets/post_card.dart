@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/home_posts.dart';
 
@@ -12,9 +13,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        context.push("/posts/${recentPost.id}", extra: recentPost);
-      },
+      onTap: () => context.push("/posts/${recentPost.id}", extra: recentPost),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
@@ -29,94 +28,129 @@ class PostCard extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 유저 아바타, 이름, 게시 일자
-              Row(
-                children: [
-                  const CircleAvatar(child: Icon(Icons.person)),
-                  const SizedBox(width: 8),
-                  Text(
-                    "${recentPost.userName} · ${recentPost.createdAt.year}-${recentPost.createdAt.month.toString().padLeft(2, '0')}-${recentPost.createdAt.day.toString().padLeft(2, '0')}",
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // 종 및 품종
-              Row(
-                children: [
-                  Chip(
-                    label: Text(
-                      recentPost.postType,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    side: BorderSide.none,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "${recentPost.species} · ${recentPost.breeds}",
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // 게시글 제목
-              Text(
-                recentPost.title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              // 게시글 내용
-              Text(
-                recentPost.content,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 14, color: Colors.black87),
-              ),
-
-              const SizedBox(height: 10),
-
-              // 이미지
-              SizedBox(
-                height: 300,
-                child: ClipRRect(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: SizedBox(
+            height: 160,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // 이미지
+                ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child:
-                      recentPost.imageUrl == null ||
+                      recentPost.imageUrl != null ||
                           recentPost.imageUrl!.isEmpty
-                      ? const Icon(Icons.pets, size: 80, color: Colors.grey)
-                      : Image.network(
+                      ? Image.network(
                           recentPost.imageUrl!,
-                          width: double.infinity,
+                          width: 100,
+                          height: 100,
                           fit: BoxFit.cover,
-                        ),
+                        )
+                      : const Icon(Icons.pets, size: 80, color: Colors.grey),
                 ),
-              ),
-            ],
+
+                const SizedBox(width: 14),
+
+                // 텍스트
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 게시글 타입 및 종, 품종
+                      Row(
+                        children: [
+                          Chip(
+                            label: Text(
+                              recentPost.postType,
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            side: BorderSide.none,
+                            padding: EdgeInsets.zero,
+                            backgroundColor: const Color(0xFFC8F2E3),
+                            visualDensity: VisualDensity(
+                              horizontal: 0,
+                              vertical: -4,
+                            ),
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Chip(
+                            label: Text(
+                              "${recentPost.species} · ${recentPost.breeds}",
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            side: BorderSide.none,
+                            padding: EdgeInsets.zero,
+                            backgroundColor: Color(0xFFBEE3FF),
+                            visualDensity: VisualDensity(
+                              horizontal: 0,
+                              vertical: -4,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // 유저 아바타, 이름, 게시 일자
+                      Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 10,
+                            child: Icon(Icons.person, size: 14),
+                          ),
+
+                          const SizedBox(width: 4),
+
+                          Text(
+                            "${recentPost.userName} · ${recentPost.createdAt.getTimeAgo()}",
+                            style: const TextStyle(
+                              color: Colors.black38,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // 게시물 제목
+                      Text(
+                        recentPost.title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      // 게시글 내용
+                      Text(
+                        recentPost.content,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
