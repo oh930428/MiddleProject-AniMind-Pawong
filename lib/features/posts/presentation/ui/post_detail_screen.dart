@@ -1,69 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
+import 'package:middleproject_animind_pawong/features/posts/data/repositories/posts_repository.dart';
+import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
+import 'package:middleproject_animind_pawong/features/posts/presentation/widgets/delete_records.dart';
+import 'package:provider/provider.dart';
 
-import '../../../home/domain/entities/post_item.dart';
+import '../../../home/domain/entities/home_posts.dart';
 
 class PostDetailScreen extends StatelessWidget {
-  final PostItem postItem;
+  final HomePost postItem;
 
   const PostDetailScreen({super.key, required this.postItem});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textScaler = MediaQuery.textScalerOf(context);
+    return ChangeNotifierProvider(
+      create: (context) => PostsViewModel(context.read<PostsRepository>()),
+      child: _PostDetailScreen(postItem: postItem),
+    );
+  }
+}
 
-    void _deleteRecord(PostItem postItem) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('게시글 삭제'),
-          content: const Text('정말 이 게시글을 삭제하시겠습니까?\n삭제된 기록은 복구할 수 없습니다'),
-          actions: [
-            OutlinedButton(
-              onPressed: () => context.pop(),
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.grey.shade700, width: 2),
-                foregroundColor: Colors.black,
-              ),
-              child: const Text('취소'),
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('삭제'),
-            ),
-          ],
-        ),
-      );
-    }
+class _PostDetailScreen extends StatelessWidget {
+  const _PostDetailScreen({super.key, required this.postItem});
 
+  final HomePost postItem;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Animind - ${postItem.post_type == "post" ? "게시글" : postItem.post_type}',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontSize: textScaler.scale(24.0),
-            fontWeight: FontWeight.w800,
-          ),
+          'Animind - ${postItem.postType == "post" ? "게시글" : postItem.postType}',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
         ),
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert), // ⋮ 세로 점 3개
+            icon: const Icon(Icons.more_vert),
             onSelected: (value) {
               if (value == 'edit') {
-                context.push("/posts/add");
+                context.push("/posts/add", extra: postItem);
               }
               if (value == 'delete') {
-                _deleteRecord(postItem);
+                deleteDialog(context, postItem.id.toString());
               }
             },
-            itemBuilder: (context) => [
+            itemBuilder: (_) => [
               const PopupMenuItem(value: 'edit', child: Text('수정')),
               const PopupMenuItem(value: 'delete', child: Text('삭제')),
             ],
@@ -73,9 +57,9 @@ class PostDetailScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Divider(color: Colors.black.withOpacity(0.2), height: 2),
-
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -87,20 +71,19 @@ class PostDetailScreen extends StatelessWidget {
                         const CircleAvatar(child: Icon(Icons.person)),
                         const SizedBox(width: 8),
                         Text(
-                          "${postItem.user_id} · ${postItem.created_at}",
+                          "${postItem.userName} · ${postItem.createdAt.year}-${postItem.createdAt.month.toString().padLeft(2, '0')}-${postItem.createdAt.day.toString().padLeft(2, '0')}",
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 8),
-
-                    // 종 및 품종
                     Row(
+                      spacing: 8,
                       children: [
+                        // 게시글 타입
                         Chip(
                           label: Text(
-                            postItem.post_type,
+                            postItem.postType,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -117,42 +100,41 @@ class PostDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        // 종 및 품종
                         Text(
-                          "${postItem.species} · ${postItem.breeds} · 3살 · ${postItem.weight}kg",
+                          "${postItem.species} · ${postItem.breeds}",
+                          style: const TextStyle(color: Colors.black54),
+                        ),
+                        // 나이, 몸무게, 성별
+                        Text(
+                          "3살 · ${postItem.weight}kg · ${postItem.gender}",
                           style: const TextStyle(color: Colors.black54),
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 8),
-
                     // 게시글 제목
-                    const Text(
-                      "고양이가 밥을 안 먹어요",
+                    Text(
+                      postItem.title,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 6),
-
                     // 게시글 내용
-                    const Text(
-                      "첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !! 첫번째 게시글입니다 !!",
+                    Text(
+                      postItem.content,
                       style: TextStyle(fontSize: 16, color: Colors.black87),
                     ),
-
                     const SizedBox(height: 10),
-
                     // 이미지
                     SizedBox(
                       height: 300,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          postItem.image_url,
+                          postItem.imageUrl ?? "",
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
@@ -161,26 +143,24 @@ class PostDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               Divider(color: Colors.black.withOpacity(0.2), height: 2),
-
+              // 댓글 갯수
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
                   spacing: 10,
-                  children: [Icon(Icons.chat_bubble_outline), Text('답변 3')],
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [Icon(Icons.chat_bubble_outline), Text('댓글 1개')],
                 ),
               ),
-
               Divider(color: Colors.black.withOpacity(0.2), height: 2),
-
+              // 댓글
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("답변 3개"),
                     Row(
                       spacing: 10,
                       children: [
@@ -200,7 +180,7 @@ class PostDetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    postItem.created_at,
+                                    "${postItem.createdAt.year}-${postItem.createdAt.month.toString().padLeft(2, '0')}-${postItem.createdAt.day.toString().padLeft(2, '0')}",
                                     style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -209,9 +189,9 @@ class PostDetailScreen extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                postItem.content,
+                                "첫번째 댓글입니다.",
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -223,9 +203,8 @@ class PostDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               Divider(color: Colors.black.withOpacity(0.2), height: 2),
-
+              // 댓글 추가
               Container(
                 padding: EdgeInsets.all(12.0),
                 color: Colors.white,
@@ -261,7 +240,6 @@ class PostDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               Divider(color: Colors.black.withOpacity(0.2), height: 2),
             ],
           ),
