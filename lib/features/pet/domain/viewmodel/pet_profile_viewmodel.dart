@@ -70,8 +70,12 @@ class PetProfileViewModel extends ChangeNotifier {
   Future<void> addPet(Pet pet, File? imageFile) async {
     _setLoading(true);
     try {
-      await _repo.addPet(pet, imageFile);
+      final newPet = await _repo.addPet(pet, imageFile);
       await loadPets();
+      _selectedPet = _pets.firstWhere(
+        (p) => p.id == newPet.id,
+        orElse: () => _pets.first,
+      );
     } catch (e) {
       print(e);
     } finally {

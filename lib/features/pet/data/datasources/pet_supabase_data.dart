@@ -68,7 +68,7 @@ class PetSupabaseDataSource {
     final path = 'pet_images/$petId/$fileName';
 
     final storageUrl =
-        '${dotenv.env["SUPABASE_BASE_URL"]}/storage/v1/object/pets/$path';
+        '${dotenv.env["SUPABASE_BASE_URL"]}/storage/v1/object/pet_image/$path';
 
     final formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(imageFile.path, filename: fileName),
@@ -82,7 +82,7 @@ class PetSupabaseDataSource {
       );
       _handleResponse(response);
 
-      return '${dotenv.env["SUPABASE_BASE_URL"]}/storage/v1/object/public/pets/$path';
+      return '${dotenv.env["SUPABASE_BASE_URL"]}/storage/v1/object/public/pet_image/$path';
     } on DioException catch (e) {
       print('Dio upload error: ${e.message}');
       throw Exception('Image upload failed: ${e.response?.data}');
@@ -106,9 +106,12 @@ class PetSupabaseDataSource {
           'select': '*,breeds!inner(*,species!inner(*))',
           'limit': 1,
         },
+        options: Options(headers: {'Prefer': 'return=representation'}),
       );
       final insertedDataList = _handleResponse(insertResponse);
-      if (insertedDataList.isEmpty) throw Exception('Failed to insert pet.');
+      if (insertedDataList.isEmpty) {
+        throw Exception('Failed to insert pet.');
+      }
 
       var insertedData = insertedDataList.first;
       final petId = insertedData['id'].toString();
@@ -159,6 +162,7 @@ class PetSupabaseDataSource {
           'select': '*,breeds!inner(*,species!inner(*))',
           'limit': 1,
         },
+        options: Options(headers: {'Prefer': 'return=representation'}),
       );
       final dataList = _handleResponse(response);
       if (dataList.isNotEmpty) {

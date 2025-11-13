@@ -101,6 +101,7 @@ class PetEditScreen extends StatelessWidget {
                       icon: Icons.monitor_weight,
                       keyboardType: TextInputType.number,
                     ),
+                    const SizedBox(height: 16),
                     _buildNeuteredSwitch(viewModel),
                   ],
                 ),
@@ -175,17 +176,16 @@ class PetEditScreen extends StatelessWidget {
   }
 
   Widget _buildGenderRadio(PetEditViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 12.0, bottom: 8.0),
-          child: Text(
-            '성별',
-            style: TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-        ),
-        Row(
+    return InputDecorator(
+      decoration: _inputDecoration(
+        '성별',
+        Icons.wc,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      ),
+      child: SizedBox(
+        height: 48,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: RadioListTile<String>(
@@ -193,6 +193,8 @@ class PetEditScreen extends StatelessWidget {
                 value: '남아',
                 groupValue: viewModel.selectedGender,
                 onChanged: (value) => viewModel.onGenderChanged(value),
+                dense: true,
+                visualDensity: VisualDensity.compact,
               ),
             ),
             Expanded(
@@ -201,22 +203,36 @@ class PetEditScreen extends StatelessWidget {
                 value: '여아',
                 groupValue: viewModel.selectedGender,
                 onChanged: (value) => viewModel.onGenderChanged(value),
+                dense: true,
+                visualDensity: VisualDensity.compact,
               ),
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildNeuteredSwitch(PetEditViewModel viewModel) {
-    return SwitchListTile(
-      title: const Text('중성화 여부'),
-      value: viewModel.isNeutered,
-      onChanged: (value) => viewModel.onNeuteredChanged(value),
-      secondary: const Icon(
+    return InputDecorator(
+      decoration: _inputDecoration(
+        '중성화 여부',
         Icons.medical_services_outlined,
-        color: AppColors.primary,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      ),
+      child: SizedBox(
+        height: 48,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('중성화 여부', style: TextStyle(fontSize: 16)),
+            Switch(
+              value: viewModel.isNeutered,
+              onChanged: (value) => viewModel.onNeuteredChanged(value),
+              activeColor: AppColors.primary,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,10 +264,15 @@ class PetEditScreen extends StatelessWidget {
     );
   }
 
-  InputDecoration _inputDecoration(String labelText, IconData icon) {
+  InputDecoration _inputDecoration(
+    String labelText,
+    IconData icon, {
+    EdgeInsetsGeometry? contentPadding,
+  }) {
     return InputDecoration(
       labelText: labelText,
       prefixIcon: Icon(icon, color: AppColors.primary),
+      contentPadding: contentPadding,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
