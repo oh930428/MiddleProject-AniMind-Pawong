@@ -14,15 +14,15 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // 이미지 소스 결정 (네트워크 또는 로컬 파일)
     ImageProvider? backgroundImage;
-    if (pet.imageUrl.startsWith('http')) {
-      backgroundImage = NetworkImage(pet.imageUrl);
-    } else if (pet.imageUrl.isNotEmpty) {
-      backgroundImage = FileImage(File(pet.imageUrl));
+    if (pet.imageUrl!.startsWith('http')) {
+      backgroundImage = NetworkImage(pet.imageUrl!);
+    } else if (pet.imageUrl!.isNotEmpty) {
+      backgroundImage = FileImage(File(pet.imageUrl!));
     }
 
     return Container(
       margin: const EdgeInsets.symmetric(
-        horizontal: AppLayout.horizontalPadding,
+        horizontal: AppLayout.horizontalPadding * 1.5,
       ),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -36,30 +36,68 @@ class ProfileCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          CircleAvatar(
-            radius: 45,
-            backgroundColor: AppColors.lightGrey,
-            backgroundImage: backgroundImage, // 변경
-            child:
-                backgroundImage ==
-                    null // 변경
-                ? const Icon(Icons.pets, size: 40, color: Colors.grey)
-                : null,
-          ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                pet.name,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 45,
+                  backgroundColor: AppColors.lightGrey,
+                  backgroundImage: backgroundImage,
+                  child: backgroundImage == null
+                      ? const Icon(Icons.pets, size: 40, color: Colors.grey)
+                      : null,
                 ),
-              ),
-              const SizedBox(height: 4),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  pet.name,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3.0,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
+            itemCount: pet.infoGridData.length,
+            itemBuilder: (context, index) {
+              final item = pet.infoGridData[index];
+              return SizedBox(
+                height: 40,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      item['label']!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['value']!,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

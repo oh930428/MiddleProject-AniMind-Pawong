@@ -7,17 +7,30 @@ import 'package:provider/provider.dart';
 import '../domain/viewmodel/setting_viewmodel.dart';
 
 // 설정 화면 위젯
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SettingViewModel(),
+      child: const _SettingsScreenView(),
+    );
+  }
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenView extends StatefulWidget {
+  const _SettingsScreenView({super.key});
+
+  @override
+  State<_SettingsScreenView> createState() => _SettingsScreenViewState();
+}
+
+class _SettingsScreenViewState extends State<_SettingsScreenView> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<SettingViewModel>(context, listen: false).loadUserEmail();
     });

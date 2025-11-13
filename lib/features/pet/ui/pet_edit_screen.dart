@@ -34,7 +34,6 @@ class PetEditScreen extends StatelessWidget {
       child: Consumer<PetEditViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            backgroundColor: AppColors.lightGrey,
             appBar: AppBar(title: Text(pet == null ? '반려동물 추가' : '프로필 수정')),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () async {
@@ -66,6 +65,7 @@ class PetEditScreen extends StatelessWidget {
             _buildImagePicker(context, viewModel),
             const SizedBox(height: 20),
             Card(
+              color: Colors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),

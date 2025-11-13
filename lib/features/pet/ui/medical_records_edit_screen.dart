@@ -18,7 +18,6 @@ class MedicalRecordsEditScreen extends StatelessWidget {
       child: Consumer<MedicalRecordsEditViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            backgroundColor: AppColors.background,
             appBar: AppBar(
               title: Text(record == null ? '병원 기록 추가' : '병원 기록 수정'),
             ),
@@ -40,6 +39,7 @@ class MedicalRecordsEditScreen extends StatelessWidget {
                   children: <Widget>[
                     const SizedBox(height: 20),
                     Card(
+                      color: Colors.white,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16.0),
