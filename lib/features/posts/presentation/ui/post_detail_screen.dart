@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
-import 'package:middleproject_animind_pawong/features/posts/data/repositories/posts_repository.dart';
-import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
-import 'package:middleproject_animind_pawong/features/posts/presentation/widgets/delete_records.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../home/domain/entities/home_posts.dart';
+import '../../data/repositories/posts_repository.dart';
+import '../../domain/viewmodel/posts_viewmodel.dart';
+import '../widgets/delete_records.dart';
 
 class PostDetailScreen extends StatelessWidget {
   final HomePost postItem;
