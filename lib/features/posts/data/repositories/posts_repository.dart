@@ -72,7 +72,7 @@ class PostsRepository {
     required String gender,
     required String birth,
     required String weight,
-    // required String imageUrl,
+    required String imageUrl,
   }) async {
     try {
       await postsSupabaseDataSource.updatePostsWithDio(
@@ -85,7 +85,7 @@ class PostsRepository {
         gender: gender,
         birth: birth,
         weight: weight,
-        // imageUrl: imageUrl,
+        imageUrl: imageUrl,
       );
     } catch (e) {
       print("🚨 PostsRepository.updatePosts 에러: $e");

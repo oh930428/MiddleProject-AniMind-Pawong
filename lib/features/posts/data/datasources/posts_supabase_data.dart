@@ -95,7 +95,7 @@ class PostsSupabaseDataSource {
     required String gender,
     required String birth,
     required String weight,
-    // required String imageUrl,
+    required String imageUrl,
   }) async {
     final response = await _dio.patch(
       "$_baseUrl/posts?id=eq.$postId",
@@ -109,7 +109,7 @@ class PostsSupabaseDataSource {
         "gender": gender,
         "birth": birth,
         "weight": weight,
-        // "image_url": imageUrl,
+        "image_url": imageUrl,
       },
     );
 

@@ -81,25 +81,27 @@ class PostsViewModel extends ChangeNotifier {
     required String birth,
     required String weight,
     required String imageUrl,
+    File? imageFile,
   }) async {
     try {
       isLoading = true;
       notifyListeners();
 
       final userId = Supabase.instance.client.auth.currentSession!.user.id;
+      String publicUrl = imageUrl;
 
-      final file = File(imageUrl);
-      final bytes = await file.readAsBytes();
+      if (imageFile != null) {
+        final bytes = await imageFile.readAsBytes();
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+        await Supabase.instance.client.storage
+            .from('pet_image')
+            .uploadBinary(fileName, bytes);
 
-      await Supabase.instance.client.storage
-          .from('pet_image') // 생성한 버킷 이름
-          .uploadBinary(fileName, bytes);
-
-      final String publicUrl = Supabase.instance.client.storage
-          .from('pet_image')
-          .getPublicUrl(fileName);
+        publicUrl = Supabase.instance.client.storage
+            .from('pet_image')
+            .getPublicUrl(fileName);
+      }
 
       await _postsRepository.addPosts(
         userId: userId,
@@ -135,24 +137,27 @@ class PostsViewModel extends ChangeNotifier {
     required String gender,
     required String birth,
     required String weight,
-    // required String imageUrl,
+    required String imageUrl,
+    File? imageFile,
   }) async {
     try {
       isLoading = true;
       notifyListeners();
 
-      // final file = File(imageUrl);
-      // final bytes = await file.readAsBytes();
-      //
-      // final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      //
-      // await Supabase.instance.client.storage
-      //     .from('pet_image') // 생성한 버킷 이름
-      //     .uploadBinary(fileName, bytes);
-      //
-      // final String publicUrl = Supabase.instance.client.storage
-      //     .from('pet_image')
-      //     .getPublicUrl(fileName);
+      String publicUrl = imageUrl;
+
+      if (imageFile != null) {
+        final bytes = await imageFile.readAsBytes();
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+        await Supabase.instance.client.storage
+            .from('pet_image')
+            .uploadBinary(fileName, bytes);
+
+        publicUrl = Supabase.instance.client.storage
+            .from('pet_image')
+            .getPublicUrl(fileName);
+      }
 
       await _postsRepository.updatePosts(
         postId: postId,
@@ -164,7 +169,7 @@ class PostsViewModel extends ChangeNotifier {
         gender: gender,
         birth: birth,
         weight: weight,
-        // imageUrl: publicUrl,
+        imageUrl: publicUrl,
       );
 
       await loadInitialPosts();
