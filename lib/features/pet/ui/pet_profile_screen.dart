@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../domain/entities/pet.dart';
 import '../domain/viewmodel/pet_profile_viewmodel.dart';
-import '../widgets/info_grid_card.dart';
 import '../widgets/pet_switcher_tab.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/profile_section_header.dart';
@@ -120,7 +119,6 @@ class _PetProfileView extends StatelessWidget {
     final textScaler = MediaQuery.textScalerOf(context);
 
     return Scaffold(
-      backgroundColor: AppColors.lightGrey,
       appBar: AppBar(
         title: Text(
           '반려동물 프로필',
@@ -187,25 +185,25 @@ class _PetProfileView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppLayout.horizontalPadding,
-              ),
-              child: PetSwitcherTab(
-                pets: viewModel.pets,
-                selectedPet: selectedPet,
-                onPetSelected: (pet) => viewModel.selectPet(pet),
-                onAddPet: () => _navigateToAddEditScreen(context, null),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppLayout.horizontalPadding * 1.5,
+                ),
+                child: PetSwitcherTab(
+                  pets: viewModel.pets,
+                  selectedPet: selectedPet,
+                  onPetSelected: (pet) => viewModel.selectPet(pet),
+                  onAddPet: () => _navigateToAddEditScreen(context, null),
+                ),
               ),
             ),
             const SizedBox(height: AppLayout.sectionSpacing),
             ProfileCard(pet: selectedPet),
             const SizedBox(height: AppLayout.sectionSpacing),
-            InfoGridCard(data: selectedPet.infoGridData),
-            const SizedBox(height: AppLayout.sectionSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppLayout.horizontalPadding,
+                horizontal: AppLayout.horizontalPadding * 1.5,
               ),
               child: OutlinedButton.icon(
                 onPressed: () =>

@@ -77,7 +77,7 @@ class MedicalRecordsScreen extends StatelessWidget {
       child: Consumer<MedicalRecordsViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            backgroundColor: AppColors.lightGrey,
+            // backgroundColor: AppColors.lightGrey,
             appBar: AppBar(title: Text('${pet.name} - 병원 기록')),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _addOrEditRecord(context, viewModel),
@@ -105,6 +105,7 @@ class MedicalRecordsScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final record = viewModel.records[index];
         return Card(
+          color: Colors.white,
           margin: const EdgeInsets.only(bottom: 8.0),
           elevation: 1,
           shape: RoundedRectangleBorder(

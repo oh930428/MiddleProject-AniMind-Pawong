@@ -24,7 +24,6 @@ void main() async {
         Provider(create: (_) => HomeRepository(HomeSupabaseDataSource())),
         Provider(create: (_) => PostsRepository(PostsSupabaseDataSource())),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => SettingViewModel()),
       ],
       child: const MyApp(),
     ),
