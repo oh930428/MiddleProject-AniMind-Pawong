@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
 import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/viewmodel/setting_viewmodel.dart';
 
@@ -42,6 +43,11 @@ class _SettingsScreenViewState extends State<_SettingsScreenView> {
     final settingViewModel = Provider.of<SettingViewModel>(context);
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     final userEmail = settingViewModel.userEmail;
+
+    Future<void> _changeOrnboardingStatus() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('onboarding_status', false);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -140,8 +146,9 @@ class _SettingsScreenViewState extends State<_SettingsScreenView> {
                     title: '온보딩 다시 보기',
                     subtitle: '앱 소개를 다시 확인합니다',
                     isLast: true,
-                    onTap: () {
+                    onTap: () async {
                       // TODO: 온보딩 화면으로 이동
+                      await _changeOrnboardingStatus();
                       _showActionSnackbar(context, '온보딩 재시작 기능이 호출되었습니다.');
                     },
                   ),
