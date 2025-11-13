@@ -40,7 +40,7 @@ class PostsRepository {
     required String gender,
     required String birth,
     required String weight,
-    required String imageUrl,
+    required String? imageUrl,
   }) async {
     try {
       await postsSupabaseDataSource.addPostsWithDio(
@@ -72,7 +72,7 @@ class PostsRepository {
     required String gender,
     required String birth,
     required String weight,
-    required String imageUrl,
+    required String? imageUrl,
   }) async {
     try {
       await postsSupabaseDataSource.updatePostsWithDio(

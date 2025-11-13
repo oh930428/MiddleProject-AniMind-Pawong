@@ -49,7 +49,7 @@ class _PostsScreen extends StatelessWidget {
                 "전체",
                 ...viewModel.species.map((e) => e.speciesName),
               ];
-              final postType = ["전체", "게시글", "Q&A"];
+              final postType = ["전체", "post", "Q&A"];
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

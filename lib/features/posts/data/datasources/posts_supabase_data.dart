@@ -58,7 +58,7 @@ class PostsSupabaseDataSource {
     required String gender,
     required String birth,
     required String weight,
-    required String imageUrl,
+    required String? imageUrl,
   }) async {
     final response = await _dio.post(
       "$_baseUrl/posts",
@@ -77,8 +77,6 @@ class PostsSupabaseDataSource {
       },
     );
 
-    print("res: $response");
-
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception("게시글 추가 실패: ${response.statusMessage}");
     }
@@ -95,7 +93,7 @@ class PostsSupabaseDataSource {
     required String gender,
     required String birth,
     required String weight,
-    required String imageUrl,
+    required String? imageUrl,
   }) async {
     final response = await _dio.patch(
       "$_baseUrl/posts?id=eq.$postId",
@@ -112,8 +110,6 @@ class PostsSupabaseDataSource {
         "image_url": imageUrl,
       },
     );
-
-    print("res: $response");
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception("게시글 추가 실패: ${response.statusMessage}");

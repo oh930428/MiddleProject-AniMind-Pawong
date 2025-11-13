@@ -54,6 +54,8 @@ class _PostsBodyState extends State<_PostsBody> {
   @override
   void initState() {
     super.initState();
+    _imageUrl = widget.postItem?.imageUrl;
+    _pickedImage = null;
     _titleController = TextEditingController(
       text: widget.postItem?.title ?? '',
     );
@@ -92,12 +94,13 @@ class _PostsBodyState extends State<_PostsBody> {
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
       setState(() {
         _pickedImage = File(pickedFile.path);
-        _imageUrlController.text = "";
+        _imageUrlController.text = '';
       });
-    } else {}
+    }
   }
 
   Future<void> _selectDate(
@@ -126,9 +129,15 @@ class _PostsBodyState extends State<_PostsBody> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final postItem = widget.postItem;
+          final postId = widget.postItem?.id;
 
-          if (postItem == null) {
+          if (_pickedImage != null) {
+            _imageUrl = await context.read<PostsViewModel>().uploadImage(
+              pickedImage: _pickedImage!,
+            );
+          }
+
+          if (postId == null) {
             await context.read<PostsViewModel>().addPosts(
               postType: _selectedPostType,
               title: _titleController.text,
@@ -138,12 +147,11 @@ class _PostsBodyState extends State<_PostsBody> {
               gender: _selectedGender,
               birth: _birthController.text,
               weight: _weightController.text,
-              imageUrl: _imageUrlController.text,
-              imageFile: _pickedImage,
+              imageUrl: _imageUrl,
             );
           } else {
             await context.read<PostsViewModel>().updatePosts(
-              postId: postItem.id.toString(),
+              postId: postId.toString(),
               postType: _selectedPostType,
               title: _titleController.text,
               content: _contentController.text,
@@ -152,8 +160,7 @@ class _PostsBodyState extends State<_PostsBody> {
               gender: _selectedGender,
               birth: _birthController.text,
               weight: _weightController.text,
-              imageUrl: _imageUrlController.text,
-              imageFile: _pickedImage,
+              imageUrl: _imageUrl,
             );
           }
           context.go("/posts");

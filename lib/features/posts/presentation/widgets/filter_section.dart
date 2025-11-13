@@ -26,6 +26,7 @@ class FilterSection extends StatelessWidget {
           title,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
+
         const SizedBox(height: 8),
 
         // 필터칩 리스트
@@ -41,7 +42,7 @@ class FilterSection extends StatelessWidget {
 
               return ActionChip(
                 label: Text(
-                  label,
+                  label == "post" ? "게시글" : label,
                   style: TextStyle(
                     color: isSelected ? Colors.white : AppColors.textSecondary,
                     fontWeight: FontWeight.w600,
