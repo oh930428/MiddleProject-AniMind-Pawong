@@ -130,13 +130,6 @@ class _PetProfileView extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: viewModel.selectedPet != null
-                ? () => _navigateToAddEditScreen(context, viewModel.selectedPet)
-                : null,
-            tooltip: '프로필 수정',
-          ),
-          IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
               context.push('/profile/settings');
@@ -199,36 +192,14 @@ class _PetProfileView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppLayout.sectionSpacing),
-            ProfileCard(pet: selectedPet),
-            const SizedBox(height: AppLayout.sectionSpacing),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppLayout.horizontalPadding * 1.5,
-              ),
-              child: OutlinedButton.icon(
-                onPressed: () =>
-                    _showDeleteConfirmationDialog(context, viewModel),
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                label: Text(
-                  '반려동물 정보 삭제',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(AppLayout.minTouchTarget),
-                  backgroundColor: AppColors.cardBackground,
-                  side: const BorderSide(color: AppColors.border),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppLayout.cardRadius),
-                  ),
-                ),
-              ),
+            ProfileCard(
+              pet: selectedPet,
+              onEditPressed: () =>
+                  _navigateToAddEditScreen(context, viewModel.selectedPet),
+              onDeletePressed: () =>
+                  _showDeleteConfirmationDialog(context, viewModel),
             ),
+            const SizedBox(height: AppLayout.sectionSpacing),
             const SizedBox(height: AppLayout.sectionSpacing),
             ProfileSectionHeader(
               title: '병원 기록',
@@ -265,12 +236,14 @@ class _PetProfileView extends StatelessWidget {
       );
     }
 
+    final recentRecords = viewModel.records.take(3);
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppLayout.horizontalPadding * 1.5,
       ),
       child: Column(
-        children: viewModel.records
+        children: recentRecords
             .map((record) => MedicalRecordsItem(record: record))
             .toList(),
       ),
