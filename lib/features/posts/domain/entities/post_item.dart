@@ -6,7 +6,7 @@ class PostItem {
   final String species;
   final String breeds;
   final String gender;
-  final DateTime birth;
+  final String birth;
   final String weight;
   final String? imageUrl;
   final DateTime createdAt;
@@ -40,7 +40,7 @@ class PostItem {
       species: json['species'],
       breeds: json['breeds'],
       gender: json['gender'],
-      birth: DateTime.parse(json['birth']),
+      birth: json['birth'],
       weight: json['weight'],
       imageUrl: json['image_url'],
       createdAt: DateTime.parse(json['created_at']),
@@ -63,7 +63,7 @@ class PostItem {
       'species': species,
       'breeds': breeds,
       'gender': gender,
-      'birth': birth.toIso8601String(),
+      'birth': birth,
       'weight': weight,
       'image_url': imageUrl,
       'created_at': createdAt.toIso8601String(),

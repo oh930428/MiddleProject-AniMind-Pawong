@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,6 +8,7 @@ import 'core/router/app_router.dart';
 import 'features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'features/home/data/datasources/home_supabase_data.dart';
 import 'features/home/data/repositories/home_repository.dart';
+import 'features/pet/domain/viewmodel/setting_viewmodel.dart';
 import 'features/posts/data/datasources/posts_supabase_data.dart';
 import 'features/posts/data/repositories/posts_repository.dart';
 
@@ -24,6 +26,9 @@ void main() async {
         Provider(create: (_) => HomeRepository(HomeSupabaseDataSource())),
         Provider(create: (_) => PostsRepository(PostsSupabaseDataSource())),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(
+          create: (context) => PostsViewModel(context.read<PostsRepository>()),
+        ),
       ],
       child: const MyApp(),
     ),

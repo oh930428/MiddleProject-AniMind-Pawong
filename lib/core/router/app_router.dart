@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:middleproject_animind_pawong/features/home/domain/entities/home_posts.dart';
 import 'package:middleproject_animind_pawong/features/home/domain/entities/post_item.dart';
+import 'package:middleproject_animind_pawong/features/posts/presentation/ui/post_add_screen.dart';
 import 'package:middleproject_animind_pawong/features/posts/presentation/ui/post_detail_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -62,26 +64,40 @@ GoRouter createRouter(BuildContext context) {
       ),
 
       // 회원가입
-      GoRoute(path: '/signup', builder: (_, __) => const SignupScreen()),
+      GoRoute(path: '/signup', builder: (_, _) => const SignupScreen()),
 
-      //홈 / 프로필 / FAQ
       ShellRoute(
-        builder: (_, __, child) => HomeShell(child: child),
+        builder: (_, _, child) => HomeShell(child: child),
         routes: [
+          // 홈
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+
+          // 게시글
           GoRoute(
             path: '/posts',
-            builder: (_, __) => const PostsScreen(),
+            builder: (_, _) => const PostsScreen(),
             routes: [
+              // 게시글 추가, 수정 화면
+              GoRoute(
+                path: "add",
+                builder: (_, state) {
+                  final postItem = state.extra as HomePost?;
+                  return PostAddScreen(postItem: postItem);
+                },
+              ),
+
+              // 게시글 상세
               GoRoute(
                 path: ":post_id",
                 builder: (_, state) {
-                  final postItem = state.extra as PostItem;
+                  final postItem = state.extra as HomePost;
                   return PostDetailScreen(postItem: postItem);
                 },
               ),
             ],
           ),
+
+          // FAQ
           GoRoute(path: '/faq', builder: (_, __) => const FaqScreen()),
 
           // 알림 화면
@@ -98,7 +114,7 @@ GoRouter createRouter(BuildContext context) {
               // pet 병원 기록 화면
               GoRoute(
                 path: '/hospital_record',
-                builder: (context, state) {
+                builder: (_, state) {
                   final pet = state.extra as Pet;
                   return MedicalRecordsScreen(pet: pet);
                 },
@@ -106,7 +122,7 @@ GoRouter createRouter(BuildContext context) {
                   // pet 병원 기록 수정, 추가 화면
                   GoRoute(
                     path: 'edit',
-                    builder: (context, state) {
+                    builder: (_, state) {
                       final record = state.extra as MedicalRecords?;
                       return MedicalRecordsEditScreen(record: record);
                     },
@@ -117,7 +133,7 @@ GoRouter createRouter(BuildContext context) {
               // pet 프로필 수정, 추가 화면
               GoRoute(
                 path: '/pet_edit',
-                builder: (context, state) {
+                builder: (_, state) {
                   final pet = state.extra as Pet?;
                   return PetEditScreen(pet: pet);
                 },
@@ -126,7 +142,7 @@ GoRouter createRouter(BuildContext context) {
               // 설정 화면
               GoRoute(
                 path: '/settings',
-                builder: (context, state) => const SettingsScreen(),
+                builder: (_, _) => const SettingsScreen(),
               ),
             ],
           ),
