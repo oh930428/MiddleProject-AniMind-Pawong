@@ -9,38 +9,121 @@ class MedicalRecordsDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('병원 기록 상세')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDetailRow('방문 이유', record.visitReason),
-            _buildDetailRow(
-              '방문 날짜',
-              DateFormat('yyyy-MM-dd').format(record.visitedat!),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxCardWidth = constraints.maxWidth > 600
+              ? 520.0
+              : constraints.maxWidth * 0.92;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxCardWidth),
+                child: Card(
+                  elevation: 3,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 24,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '병원 방문 정보',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        _buildDetailRow(
+                          label: '방문 이유',
+                          value: record.visitReason,
+                        ),
+                        const Divider(height: 24),
+
+                        _buildDetailRow(
+                          label: '방문 날짜',
+                          value: record.visitedat != null
+                              ? DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(record.visitedat!)
+                              : '날짜 미상',
+                        ),
+                        const SizedBox(height: 12),
+
+                        _buildDetailRow(
+                          label: '다음 방문 예정일',
+                          value: record.nextVisitat != null
+                              ? DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(record.nextVisitat!)
+                              : '정보 없음',
+                        ),
+                        const Divider(height: 32),
+
+                        Text(
+                          '메모',
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(
+                            (record.memo?.isNotEmpty ?? false)
+                                ? record.memo!
+                                : '메모가 없습니다.',
+                            style: textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-            _buildDetailRow('다음 방문 예정일 (선택)', record.nextVisitat as String?),
-            _buildDetailRow('메모', record.memo),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String? value) {
+  Widget _buildDetailRow({required String label, String? value}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          SizedBox(
+            width: 110,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(value ?? '정보 없음', style: const TextStyle(fontSize: 16)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(value ?? '정보 없음', style: const TextStyle(fontSize: 15)),
+          ),
         ],
       ),
     );
