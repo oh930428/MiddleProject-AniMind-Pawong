@@ -156,9 +156,7 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
         elevation: 0,
         title: const Text(
           '자주 묻는 질문',
@@ -176,18 +174,28 @@ class _FaqScreenState extends State<FaqScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.textSecondary,
+                color: AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: '궁금한 내용을 검색해보세요',
-                  hintStyle: TextStyle(color: Colors.white, fontSize: 14),
-                  prefixIcon: Icon(Icons.search, color: Colors.white),
+                  hintStyle: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: AppColors.textSecondary,
+                  ),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear, color: Colors.white),
+                          icon: const Icon(
+                            Icons.clear,
+                            color: AppColors.textSecondary,
+                          ),
                           onPressed: _clearSearch,
                         )
                       : null,
@@ -223,7 +231,6 @@ class _FaqScreenState extends State<FaqScreen> {
               ),
             ),
           const SizedBox(height: 8),
-          Container(height: 8, color: Colors.black),
           Expanded(child: _buildTable()),
         ],
       ),
@@ -299,7 +306,7 @@ class _FaqScreenState extends State<FaqScreen> {
                           width: 28,
                           height: 28,
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
+                            color: Color(0xFFCBF3BB),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: const Center(
@@ -405,7 +412,7 @@ class _FaqScreenState extends State<FaqScreen> {
         child: Text(
           category,
           style: TextStyle(
-            color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+            color: isSelected ? Colors.white : AppColors.textSecondary,
             fontSize: 14,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
