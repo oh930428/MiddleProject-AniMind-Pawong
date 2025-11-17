@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:middleproject_animind_pawong/features/home/domain/entities/home_pet.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -57,7 +58,12 @@ class PetSwitcherTab extends StatelessWidget {
             );
           }),
 
-          IconButton(icon: const Icon(Icons.add, size: 20), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.pets, size: 20),
+            onPressed: () {
+              context.go("/profile");
+            },
+          ),
         ],
       ),
     );
