@@ -77,7 +77,6 @@ class MedicalRecordsScreen extends StatelessWidget {
       child: Consumer<MedicalRecordsViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            // backgroundColor: AppColors.lightGrey,
             appBar: AppBar(title: Text('${pet.name} - 병원 기록')),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _addOrEditRecord(context, viewModel),

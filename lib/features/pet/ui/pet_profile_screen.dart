@@ -201,15 +201,20 @@ class _PetProfileView extends StatelessWidget {
             ),
             const SizedBox(height: AppLayout.sectionSpacing),
             const SizedBox(height: AppLayout.sectionSpacing),
-            ProfileSectionHeader(
-              title: '병원 기록',
-              onManagePressed: () async {
-                await context.push(
-                  '/profile/hospital_record',
-                  extra: selectedPet,
-                );
-                viewModel.loadMedicalRecords(selectedPet.id);
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppLayout.horizontalPadding * 1.5,
+              ),
+              child: ProfileSectionHeader(
+                title: '병원 기록',
+                onManagePressed: () async {
+                  await context.push(
+                    '/profile/hospital_record',
+                    extra: selectedPet,
+                  );
+                  viewModel.loadMedicalRecords(selectedPet.id);
+                },
+              ),
             ),
             const SizedBox(height: AppLayout.elementSpacing),
             _buildMedicalRecords(context, viewModel),

@@ -110,6 +110,7 @@ class ProfileCard extends StatelessWidget {
             top: 0,
             right: 0,
             child: PopupMenuButton<String>(
+              constraints: const BoxConstraints(maxWidth: 80),
               onSelected: (value) {
                 if (value == 'edit') {
                   onEditPressed();
@@ -118,8 +119,36 @@ class ProfileCard extends StatelessWidget {
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(value: 'edit', child: Text('수정')),
-                const PopupMenuItem<String>(value: 'delete', child: Text('삭제')),
+                PopupMenuItem<String>(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit, size: 16.0),
+                      SizedBox(width: 8),
+                      Text('수정', style: TextStyle(fontSize: 15.0)),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        size: 16.0,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '삭제',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
