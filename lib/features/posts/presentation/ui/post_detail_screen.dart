@@ -76,12 +76,12 @@ class _PostDetailScreen extends StatelessWidget {
               Divider(color: Colors.black.withOpacity(0.2), height: 2),
 
               // 게시글 - comments section
-              PostCommetsSection(postItem: postItem),
+              PostCommetsSection(postId: postItem.id),
             ],
           ),
         ),
       ),
-      bottomSheet: PostCommentInput(),
+      bottomSheet: PostCommentInput(postId: postItem.id),
     );
   }
 }

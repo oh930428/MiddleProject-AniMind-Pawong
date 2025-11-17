@@ -86,6 +86,11 @@ class PostsViewModel extends ChangeNotifier {
     }
   }
 
+  // 특정 게시글 아이디 불러오기
+  Future<HomePost> getPostById(int postId) async {
+    return await _postsRepository.getByIdPost(postId);
+  }
+
   // 게시글 - 추가
   Future<void> addPosts({
     required String postType,

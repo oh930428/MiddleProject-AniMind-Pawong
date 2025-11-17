@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
+import 'package:provider/provider.dart';
+
+import '../../features/notification/domain/viewmodel/notification_viewmodel.dart';
+import '../theme/app_colors.dart';
 
 class HomeShell extends StatelessWidget {
   final Widget child;
@@ -10,6 +13,7 @@ class HomeShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateIndex(context);
+    final notificationViewModel = context.watch<NotificationViewModel>();
 
     return Scaffold(
       body: child,
@@ -38,7 +42,7 @@ class HomeShell extends StatelessWidget {
         unselectedItemColor: Colors.grey[300], // 선택되지 않은 탭 색
         backgroundColor: Colors.white, // 배경색
         type: BottomNavigationBarType.fixed, // 4개 이상일 때 안정적
-        items: const [
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: '검색'),
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: '프로필'),
@@ -46,7 +50,27 @@ class HomeShell extends StatelessWidget {
             icon: Icon(Icons.question_mark),
             label: 'FAQ',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: '알림'),
+          BottomNavigationBarItem(
+            icon: Stack(
+              children: [
+                const Icon(Icons.notifications),
+                if (notificationViewModel.hasUnread)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            label: '알림',
+          ),
         ],
       ),
     );

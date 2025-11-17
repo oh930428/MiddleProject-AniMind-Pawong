@@ -43,7 +43,8 @@ class AuthViewModel extends ChangeNotifier {
         // clientId: dotenv.get("GOOGLE_ANDROID_CLIENT_ID"),
       );
 
-      final googleUser = await googleSignIn.attemptLightweightAuthentication();
+      final googleUser = await googleSignIn.authenticate();
+      print("googleUser: $googleUser");
 
       if (googleUser == null) {
         throw AuthException('Failed to sign in with Google.');
@@ -109,9 +110,20 @@ class AuthViewModel extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      await supabase.auth.signOut(); // 수파베이스
-      await GoogleSignIn.instance.signOut(); // 구글 로그인 해당
+      // 1️⃣ Supabase 로그아웃
+      await supabase.auth.signOut();
+
+      // 2️⃣ Google 로그아웃
+      final googleSignIn = GoogleSignIn.instance;
+
+      // 계정이 연결되어 있을 경우만 disconnect
+      await googleSignIn.disconnect(); // 완전 로그아웃
+
+      // 안전하게 signOut() 호출
+      await googleSignIn.signOut();
+
       userId = null;
+      userEmail = null;
     } catch (error) {
       debugPrint("로그아웃 실패: $error");
       rethrow;
