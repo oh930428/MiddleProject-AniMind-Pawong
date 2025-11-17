@@ -4,6 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:dio/dio.dart';
 
+import '../entities/app_user.dart';
+
 final supabase = Supabase.instance.client;
 
 class AuthViewModel extends ChangeNotifier {
@@ -30,7 +32,7 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // 구글 로그인
-  Future<void> loginWithGoogle() async {
+  Future<String?> loginWithGoogle() async {
     try {
       isLoading = true;
       notifyListeners();
@@ -44,7 +46,6 @@ class AuthViewModel extends ChangeNotifier {
       );
 
       final googleUser = await googleSignIn.authenticate();
-      print("googleUser: $googleUser");
 
       if (googleUser == null) {
         throw AuthException('Failed to sign in with Google.');
@@ -65,7 +66,12 @@ class AuthViewModel extends ChangeNotifier {
         idToken: idToken,
         accessToken: authorization.accessToken,
       );
-      return;
+
+      userId = supabase.auth.currentUser?.id;
+      userEmail = supabase.auth.currentUser?.email;
+      notifyListeners();
+
+      return userId; // ✅
     } catch (e) {
       debugPrint("Google 로그인 실패: $e");
       rethrow;
@@ -76,7 +82,7 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // 회원가입 한 유저 확인
-  Future<List<User>> fetchUserById(String userId) async {
+  Future<List<AppUser>> fetchUserById(String userId) async {
     final dio = Dio();
 
     final baseUrl = dotenv.get("SUPABASE_BASE_URL");
@@ -94,9 +100,12 @@ class AuthViewModel extends ChangeNotifier {
         queryParameters: {'select': '*', 'id': 'eq.$userId'},
       );
 
+      if (response.data == null || response.data is! List) {
+        return [];
+      }
       return (response.data as List)
-          .map((json) => User.fromJson(json))
-          .whereType<User>()
+          .map((json) => AppUser.fromJson(json))
+          .whereType<AppUser>()
           .toList();
     } catch (e) {
       debugPrint('❌ Error fetching user: $e');

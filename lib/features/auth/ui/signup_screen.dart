@@ -24,7 +24,7 @@ class _SignupPage extends StatelessWidget {
     final authVM = context.read<AuthViewModel>();
 
     return Consumer<SignUpViewModel>(
-      builder: (_, vm, _) {
+      builder: (context, vm, _) {
         final nameController = vm.nameController;
         final phoneController = vm.phoneController;
         final emailController = TextEditingController(
@@ -35,7 +35,9 @@ class _SignupPage extends StatelessWidget {
           appBar: AppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
-              onPressed: () => context.pop,
+              onPressed: () {
+                context.go("/socialLogin");
+              },
             ),
             centerTitle: true,
             title: Text("회원가입", style: TextStyle(fontSize: 18.0)),
