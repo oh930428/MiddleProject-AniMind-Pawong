@@ -7,7 +7,13 @@ class OnboardingThirdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("반려동물의 병원 기록 홍보")),
+      appBar: AppBar(
+        title: Text(
+          "반려동물의 병원 기록 홍보",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -36,12 +42,6 @@ class OnboardingThirdScreen extends StatelessWidget {
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      '3번째 온보딩 화면입니다.\n다음을 누르세요.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
                 ),
