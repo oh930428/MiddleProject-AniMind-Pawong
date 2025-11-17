@@ -13,11 +13,7 @@ class SocialLoginScreen extends StatelessWidget {
       backgroundColor: const Color(0xffE9FBF5),
       body: Center(
         child: Consumer<AuthViewModel>(
-          builder: (context, vm, _) {
-            if (vm.userId != null) {
-              Future.microtask(() => context.go('/home'));
-            }
-
+          builder: (context, viewModel, _) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -54,7 +50,7 @@ class SocialLoginScreen extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: GoogleLoginButton(isLoading: vm.isLoading),
+                  child: GoogleLoginButton(isLoading: viewModel.isLoading),
                 ),
               ],
             );
@@ -72,6 +68,8 @@ class GoogleLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = context.read<AuthViewModel>();
+
     return isLoading
         ? const CircularProgressIndicator(
             color: Color(0xFFE7EBED),
@@ -81,7 +79,21 @@ class GoogleLoginButton extends StatelessWidget {
         : ElevatedButton(
             onPressed: isLoading
                 ? null
-                : context.read<AuthViewModel>().loginWithGoogle,
+                : () async {
+                    final userId = await authViewModel.loginWithGoogle();
+
+                    if (userId == null) return;
+
+                    final users = await authViewModel.fetchUserById(userId);
+
+                    Future.microtask(() {
+                      if (users.isNotEmpty) {
+                        context.go('/home');
+                      } else {
+                        context.go('/signup');
+                      }
+                    });
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFFFFFF),
               shape: RoundedRectangleBorder(
