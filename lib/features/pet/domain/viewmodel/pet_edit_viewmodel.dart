@@ -151,14 +151,9 @@ class PetEditViewModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>?> savePet() async {
-    _genderErrorText = null;
-    if (selectedGender == null || selectedGender!.isEmpty) {
-      _genderErrorText = '성별을 선택해주세요.';
-    }
-
     final isFormValid = formKey.currentState!.validate();
 
-    if (!isFormValid || _genderErrorText != null) {
+    if (!isFormValid) {
       notifyListeners();
       return null;
     }

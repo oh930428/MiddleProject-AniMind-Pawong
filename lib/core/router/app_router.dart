@@ -1,51 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'home_shell.dart';
 
 // ViewModel
 import '../../features/auth/domain/viewmodel/auth_viewmodel.dart';
-
-// UI
-import '../../features/splash/ui/splash_screen.dart';
-
+// UI - signup
+import '../../features/auth/ui/signup_screen.dart';
+// UI - social login
+import '../../features/auth/ui/social_login_screen.dart';
+// UI - faq
+import '../../features/faq/ui/faq_screen.dart';
+// entities
+import '../../features/home/domain/entities/home_posts.dart';
+// UI - home
+import '../../features/home/presentation/ui/home_screen.dart';
+// UI - notification
+import '../../features/notification/presentation/ui/notification_screen.dart';
 // UI - onboarding
 import '../../features/onboarding/ui/onboarding_first_screen.dart';
 import '../../features/onboarding/ui/onboarding_fourth_screen.dart';
 import '../../features/onboarding/ui/onboarding_second_screen.dart';
 import '../../features/onboarding/ui/onboarding_third_screen.dart';
-
-// UI - social login
-import '../../features/auth/ui/social_login_screen.dart';
-
-// UI - signup
-import '../../features/auth/ui/signup_screen.dart';
-
-// UI - home
-import '../../features/home/presentation/ui/home_screen.dart';
-
-// UI - posts
-import '../../features/posts/presentation/ui/posts_screen.dart';
-import '../../features/posts/presentation/ui/post_detail_screen.dart';
-import '../../features/posts/presentation/ui/post_add_screen.dart';
-
-// UI - pet
-import '../../features/pet/ui/pet_profile_screen.dart';
-import '../../features/pet/ui/pet_edit_screen.dart';
-import '../../features/pet/ui/setting_screen.dart';
-import '../../features/pet/ui/medical_records_screen.dart';
-import '../../features/pet/ui/medical_records_edit_screen.dart';
-
-// UI - faq
-import '../../features/faq/ui/faq_screen.dart';
-
-// UI - notification
-import '../../features/notification/presentation/ui/notification_screen.dart';
-
-// entities
-import '../../features/home/domain/entities/home_posts.dart';
 import '../../features/pet/domain/entities/medical_records.dart';
 import '../../features/pet/domain/entities/pet.dart';
+import '../../features/pet/ui/medical_records_detail_screen.dart';
+import '../../features/pet/ui/medical_records_edit_screen.dart';
+import '../../features/pet/ui/medical_records_screen.dart';
+import '../../features/pet/ui/pet_edit_screen.dart';
+// UI - pet
+import '../../features/pet/ui/pet_profile_screen.dart';
+import '../../features/pet/ui/setting_screen.dart';
+import '../../features/posts/presentation/ui/post_add_screen.dart';
+import '../../features/posts/presentation/ui/post_detail_screen.dart';
+// UI - posts
+import '../../features/posts/presentation/ui/posts_screen.dart';
+// UI
+import '../../features/splash/ui/splash_screen.dart';
+import 'home_shell.dart';
 
 GoRouter createRouter(BuildContext context) {
   final authViewModel = context.read<AuthViewModel>();
@@ -143,6 +134,14 @@ GoRouter createRouter(BuildContext context) {
                     builder: (_, state) {
                       final record = state.extra as MedicalRecords?;
                       return MedicalRecordsEditScreen(record: record);
+                    },
+                  ),
+                  // pet 병원 기록 상세 화면
+                  GoRoute(
+                    path: 'hospital_record_detail',
+                    builder: (_, state) {
+                      final record = state.extra as MedicalRecords;
+                      return MedicalRecordsDetailScreen(record: record);
                     },
                   ),
                 ],
