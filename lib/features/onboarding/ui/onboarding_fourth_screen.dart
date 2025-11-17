@@ -13,7 +13,10 @@ class OnboardingFourthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("마무리 단계"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("마무리 단계", style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -42,12 +45,6 @@ class OnboardingFourthScreen extends StatelessWidget {
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      '4번째 온보딩 화면입니다.\n시작하기를 누르세요',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
                 ),

@@ -239,7 +239,13 @@ class _FaqScreenState extends State<FaqScreen> {
 
   Widget _buildTable() {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xFFE7EBED),
+          backgroundColor: Color(0xFF4BA487),
+          strokeWidth: 6,
+        ),
+      );
     }
 
     if (faqs.isEmpty) {

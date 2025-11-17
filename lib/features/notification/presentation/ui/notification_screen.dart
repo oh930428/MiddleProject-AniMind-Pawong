@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import '../../domain/viewmodel/notification_viewmodel.dart';
 
+import '../../../../core/theme/app_colors.dart';
+
 // 알림 화면 위젯
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -23,7 +25,6 @@ class _NotificationScreen extends StatelessWidget {
     return Consumer<NotificationViewModel>(
       builder: (context, viewModel, child) {
         return Scaffold(
-          backgroundColor: Colors.grey[100],
           appBar: AppBar(
             title: Text(
               '알림',
@@ -31,7 +32,6 @@ class _NotificationScreen extends StatelessWidget {
             ),
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.white,
           ),
           body: RefreshIndicator(
             child: ListView.builder(
@@ -85,7 +85,7 @@ class _NotificationScreen extends StatelessWidget {
                               "${notification.fromUserName}님이 새로운 답변을 남겼습니다.",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey,
+                                color: AppColors.textPrimary,
                               ),
                             ),
                           ),
