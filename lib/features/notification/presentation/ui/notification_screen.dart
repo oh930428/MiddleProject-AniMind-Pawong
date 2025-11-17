@@ -25,7 +25,6 @@ class _NotificationScreen extends StatelessWidget {
     return Consumer<NotificationViewModel>(
       builder: (context, viewModel, child) {
         return Scaffold(
-          //backgroundColor: Colors.grey[100],
           appBar: AppBar(
             title: Text(
               '알림',
@@ -33,7 +32,6 @@ class _NotificationScreen extends StatelessWidget {
             ),
             centerTitle: true,
             elevation: 0,
-            //backgroundColor: Colors.white,
           ),
           body: RefreshIndicator(
             child: ListView.builder(
@@ -88,7 +86,6 @@ class _NotificationScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 color: AppColors.textPrimary,
-                                //color: Colors.grey,
                               ),
                             ),
                           ),
