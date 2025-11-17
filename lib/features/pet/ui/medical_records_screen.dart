@@ -112,6 +112,12 @@ class MedicalRecordsScreen extends StatelessWidget {
             side: const BorderSide(color: AppColors.border, width: 1),
           ),
           child: ListTile(
+            onTap: () {
+              context.push(
+                '/profile/hospital_record/hospital_record_detail',
+                extra: record,
+              );
+            },
             leading: const Icon(Icons.local_hospital, color: AppColors.primary),
             title: Text(
               record.visitReason,

@@ -75,9 +75,7 @@ class _PetProfileView extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('반려동물 정보 삭제'),
-          content: Text(
-            '정말 ${viewModel.selectedPet!.name}의 모든 정보를 삭제하시겠습니까? \n 삭제된 정보는 복구할 수 없습니다',
-          ),
+          content: Text('정말 모든 정보를 삭제하시겠습니까? \n 삭제된 정보는 복구할 수 없습니다'),
           actions: <Widget>[
             OutlinedButton(
               onPressed: () => Navigator.of(dialogContext).pop(),

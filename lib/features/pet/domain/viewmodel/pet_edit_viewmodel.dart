@@ -16,6 +16,8 @@ class PetEditViewModel extends ChangeNotifier {
 
   late TextEditingController nameController;
   String? selectedGender;
+  String? _genderErrorText;
+  String? get genderErrorText => _genderErrorText;
   late TextEditingController birthdateController;
   late TextEditingController weightController;
   bool isNeutered = false;
@@ -43,7 +45,7 @@ class PetEditViewModel extends ChangeNotifier {
 
   PetEditViewModel(this._initialPet) {
     nameController = TextEditingController(text: _initialPet?.name ?? "");
-    selectedGender = _initialPet?.gender;
+    selectedGender = _initialPet?.gender ?? '남아';
     birthdateController = TextEditingController(
       text: _initialPet?.birthDate != null
           ? DateFormat('yyyy-MM-dd').format(_initialPet!.birthDate!)
@@ -128,6 +130,7 @@ class PetEditViewModel extends ChangeNotifier {
 
   void onGenderChanged(String? value) {
     selectedGender = value;
+    _genderErrorText = null;
     notifyListeners();
   }
 
@@ -148,48 +151,53 @@ class PetEditViewModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>?> savePet() async {
-    if (formKey.currentState!.validate()) {
-      final birthDate = birthdateController.text.isNotEmpty
-          ? DateTime.parse(birthdateController.text)
-          : null;
-      final age = birthDate != null
-          ? (DateTime.now().difference(birthDate).inDays / 365)
-                .floor()
-                .toString()
-          : '0';
-
-      final selectedSpeciesName = _selectedSpeciesId != null
-          ? _speciesList.firstWhere(
-                  (s) => s['id'] == _selectedSpeciesId,
-                )['name']
-                as String
-          : '';
-
-      final selectedBreedName = _selectedBreedId != null
-          ? _breedsList.firstWhere((b) => b['id'] == _selectedBreedId)['name']
-                as String
-          : '';
-
-      final newPet = Pet(
-        id: _initialPet?.id ?? '',
-        name: nameController.text,
-        species_name: selectedSpeciesName,
-        breeds_name: selectedBreedName,
-        breedId: _selectedBreedId,
-        age: age,
-        gender: selectedGender ?? '',
-        birthDate: birthDate,
-        weight: double.tryParse(weightController.text) ?? 0.0,
-        imageUrl: _pickedImage?.path ?? _imageUrl ?? '',
-        isNeutered: isNeutered,
-        tags: _initialPet?.tags ?? [],
-        infoGridData: _initialPet?.infoGridData ?? [],
-        records: _initialPet?.records ?? [],
-      );
-
-      return {'pet': newPet, 'image': _pickedImage};
+    _genderErrorText = null;
+    if (selectedGender == null || selectedGender!.isEmpty) {
+      _genderErrorText = '성별을 선택해주세요.';
     }
-    return null;
+
+    final isFormValid = formKey.currentState!.validate();
+
+    if (!isFormValid || _genderErrorText != null) {
+      notifyListeners();
+      return null;
+    }
+
+    final birthDate = birthdateController.text.isNotEmpty
+        ? DateTime.parse(birthdateController.text)
+        : null;
+    final age = birthDate != null
+        ? (DateTime.now().difference(birthDate).inDays / 365).floor().toString()
+        : '0';
+
+    final selectedSpeciesName = _selectedSpeciesId != null
+        ? _speciesList.firstWhere((s) => s['id'] == _selectedSpeciesId)['name']
+              as String
+        : '';
+
+    final selectedBreedName = _selectedBreedId != null
+        ? _breedsList.firstWhere((b) => b['id'] == _selectedBreedId)['name']
+              as String
+        : '';
+
+    final newPet = Pet(
+      id: _initialPet?.id ?? '',
+      name: nameController.text,
+      species_name: selectedSpeciesName,
+      breeds_name: selectedBreedName,
+      breedId: _selectedBreedId,
+      age: age,
+      gender: selectedGender ?? '',
+      birthDate: birthDate,
+      weight: double.tryParse(weightController.text) ?? 0.0,
+      imageUrl: _pickedImage?.path ?? _imageUrl ?? '',
+      isNeutered: isNeutered,
+      tags: _initialPet?.tags ?? [],
+      infoGridData: _initialPet?.infoGridData ?? [],
+      records: _initialPet?.records ?? [],
+    );
+
+    return {'pet': newPet, 'image': _pickedImage};
   }
 
   void _setLoading(bool loading) {
