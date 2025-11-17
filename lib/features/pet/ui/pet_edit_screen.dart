@@ -181,7 +181,7 @@ class PetEditScreen extends StatelessWidget {
         '성별',
         Icons.wc,
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      ),
+      ).copyWith(errorText: viewModel.genderErrorText),
       child: SizedBox(
         height: 48,
         child: Row(
