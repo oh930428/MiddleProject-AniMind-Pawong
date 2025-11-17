@@ -17,6 +17,29 @@ class ProfileCard extends StatelessWidget {
     required this.onDeletePressed,
   });
 
+  IconData _getIconForItem(Map<String, String> item) {
+    final label = item['label']!;
+    final value = item['value']!;
+
+    switch (label) {
+      case '종':
+        return Icons.category;
+      case '품종':
+        return Icons.pets;
+      case '나이':
+        return Icons.cake;
+      case '성별':
+        if (value == '여아') return Icons.female;
+        return Icons.male;
+      case '생일':
+        return Icons.calendar_today;
+      case '체중':
+        return Icons.monitor_weight;
+      default:
+        return Icons.info_outline;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // 이미지 소스 결정 (네트워크 또는 로컬 파일)
@@ -75,23 +98,44 @@ class ProfileCard extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 3.0,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  childAspectRatio: 2.0,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
                 ),
                 itemCount: pet.infoGridData.length,
                 itemBuilder: (context, index) {
                   final item = pet.infoGridData[index];
-                  return SizedBox(
-                    height: 40,
+                  return Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryContainer,
+                      borderRadius: BorderRadius.circular(AppLayout.cardRadius),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          item['label']!,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: AppColors.textSecondary),
+                        Row(
+                          children: [
+                            Icon(
+                              _getIconForItem(item),
+                              color: AppColors.textSecondary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              item['label']!,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: AppColors.textSecondary),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 4),
                         Text(

@@ -17,7 +17,7 @@ class ProfileSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppLayout.horizontalPadding,
+        horizontal: AppLayout.horizontalPadding / 8,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
