@@ -6,12 +6,28 @@ final supabase = Supabase.instance.client;
 class SignUpViewModel extends ChangeNotifier {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
+
   bool isPrivacyAgreed = false;
+  bool showPrivacyError = false;
   bool isLoading = false;
 
+  // 개인정보 동의 토글
   void togglePrivacyAgreement(bool value) {
     isPrivacyAgreed = value;
+
+    if (value == true) {
+      showPrivacyError = false; // 체크되면 에러 숨김
+    }
+
     notifyListeners();
+  }
+
+  // 제출 버튼 눌렀을 때
+  void validatePrivacy() {
+    if (!isPrivacyAgreed) {
+      showPrivacyError = true;
+      notifyListeners();
+    }
   }
 
   Future<void> signUp({
@@ -40,5 +56,12 @@ class SignUpViewModel extends ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    super.dispose();
   }
 }
