@@ -8,8 +8,12 @@ import 'core/router/app_router.dart';
 import 'features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'features/home/data/datasources/home_supabase_data.dart';
 import 'features/home/data/repositories/home_repository.dart';
-import 'features/pet/domain/viewmodel/setting_viewmodel.dart';
+import 'features/notification/data/datasources/notification_supabase_data.dart';
+import 'features/notification/data/repositories/notification_repository.dart';
+import 'features/notification/domain/viewmodel/notification_viewmodel.dart';
+import 'features/posts/data/datasources/comments_supabase_data.dart';
 import 'features/posts/data/datasources/posts_supabase_data.dart';
+import 'features/posts/data/repositories/comments_repository.dart';
 import 'features/posts/data/repositories/posts_repository.dart';
 
 void main() async {
@@ -25,9 +29,20 @@ void main() async {
       providers: [
         Provider(create: (_) => HomeRepository(HomeSupabaseDataSource())),
         Provider(create: (_) => PostsRepository(PostsSupabaseDataSource())),
+        Provider(
+          create: (_) => CommentsRepository(CommentsSupabaseDataSource()),
+        ),
+        Provider(
+          create: (_) =>
+              NotificationRepository(NotificationSupabaseDataSource()),
+        ),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(
           create: (context) => PostsViewModel(context.read<PostsRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              NotificationViewModel(context.read<NotificationRepository>()),
         ),
       ],
       child: const MyApp(),

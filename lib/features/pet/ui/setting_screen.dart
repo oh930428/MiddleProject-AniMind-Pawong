@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/core/theme/app_colors.dart';
-import 'package:middleproject_animind_pawong/features/auth/domain/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/theme/app_colors.dart';
+import '../../auth/domain/viewmodel/auth_viewmodel.dart';
 import '../domain/viewmodel/setting_viewmodel.dart';
 
 // 설정 화면 위젯

@@ -7,7 +7,7 @@ import '../../domain/entities/home_posts.dart';
 
 class HomeSupabaseDataSource {
   late final Dio _dio;
-  final String _baseUrl = "${dotenv.env["SUPABASE_BASE_URL"]}/rest/v1/";
+  final String _baseUrl = "${dotenv.env["SUPABASE_BASE_URL"]}/rest/v1";
 
   HomeSupabaseDataSource() {
     final String apiKey = dotenv.env["SUPABASE_API_KEY"] ?? "";

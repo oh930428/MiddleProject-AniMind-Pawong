@@ -6,7 +6,7 @@ import '../../domain/entities/post_filter_species.dart';
 
 class PostsSupabaseDataSource {
   late final Dio _dio;
-  final String _baseUrl = "${dotenv.env["SUPABASE_BASE_URL"]}/rest/v1/";
+  final String _baseUrl = "${dotenv.env["SUPABASE_BASE_URL"]}/rest/v1";
 
   PostsSupabaseDataSource() {
     final String apiKey = dotenv.env["SUPABASE_API_KEY"] ?? "";
@@ -45,6 +45,19 @@ class PostsSupabaseDataSource {
     return (response.data as List)
         .map((json) => HomePost.fromJson(json))
         .toList();
+  }
+
+  // 특정 게시글 - API 호출 및 응답
+  Future<HomePost> getByIdPostWithDio(int postId) async {
+    final response = await _dio.get(
+      '$_baseUrl/posts',
+      queryParameters: {"select": "*, users(name)", "id": "eq.$postId"},
+    );
+
+    return (response.data as List)
+        .map((json) => HomePost.fromJson(json))
+        .toList()
+        .first;
   }
 
   // 게시글 추가 - API 호출 및 응답

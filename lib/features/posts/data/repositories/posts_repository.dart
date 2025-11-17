@@ -29,6 +29,17 @@ class PostsRepository {
     }
   }
 
+  // 게시글 - 특정 게시물 불러오기
+  Future<HomePost> getByIdPost(int postId) async {
+    try {
+      final posts = await postsSupabaseDataSource.getByIdPostWithDio(postId);
+      return posts;
+    } catch (e) {
+      print("🚨 PostsRepository.getByIdPost error: $e");
+      rethrow;
+    }
+  }
+
   // 게시글 - 추가
   Future<void> addPosts({
     required String userId,

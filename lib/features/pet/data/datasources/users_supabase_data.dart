@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserSupabaseData {
   late final Dio _dio;
-  final String _baseUrl = "${dotenv.env["SUPABASE_BASE_URL"]}/rest/v1/";
+  final String _baseUrl = "${dotenv.env["SUPABASE_BASE_URL"]}/rest/v1";
 
   UserSupabaseData() {
     final String apiKey = dotenv.env["SUPABASE_API_KEY"] ?? "";

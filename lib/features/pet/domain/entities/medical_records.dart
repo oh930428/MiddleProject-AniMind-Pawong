@@ -17,7 +17,6 @@ class MedicalRecords {
   });
 
   factory MedicalRecords.fromJson(Map<String, dynamic> json) {
-    print('Parsing HospitalRecord from JSON: $json');
     return MedicalRecords(
       id: json['id']?.toString(),
       userId: json['user_id']?.toString(),
