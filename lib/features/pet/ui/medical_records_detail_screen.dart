@@ -113,8 +113,8 @@ class MedicalRecordsDetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 110,
+          Expanded(
+            flex: 2,
             child: Text(
               label,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
@@ -122,6 +122,7 @@ class MedicalRecordsDetailScreen extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Expanded(
+            flex: 3,
             child: Text(value ?? '정보 없음', style: const TextStyle(fontSize: 15)),
           ),
         ],
