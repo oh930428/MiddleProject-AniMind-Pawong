@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import '../../../home/domain/entities/home_posts.dart';
+import '../../domain/entities/breed.dart';
 import '../../domain/entities/post_filter_species.dart';
 import '../datasources/posts_supabase_data.dart';
 
@@ -14,6 +17,19 @@ class PostsRepository {
       return species;
     } catch (e) {
       print("🚨 PostsRepository.getSpecies 에러: $e");
+      rethrow;
+    }
+  }
+
+  // 게시글 - 품종 불러오기 (by species_id)
+  Future<List<Breed>> getBreedsBySpeciesId(int speciesId) async {
+    try {
+      final breeds = await postsSupabaseDataSource.getBreedsBySpeciesIdWithDio(
+        speciesId,
+      );
+      return breeds;
+    } catch (e) {
+      print("🚨 PostsRepository.getBreedsBySpeciesId 에러: $e");
       rethrow;
     }
   }
@@ -40,18 +56,33 @@ class PostsRepository {
     }
   }
 
+  // 게시글 이미지 업로드
+  Future<String> uploadImage({
+    required File pickedImage,
+    required String userId,
+  }) async {
+    try {
+      return await postsSupabaseDataSource.uploadImage(
+        pickedImage: pickedImage,
+        userId: userId,
+      );
+    } catch (e) {
+      print("🚨 PostsRepository.uploadImage 에러: $e");
+      rethrow;
+    }
+  }
+
   // 게시글 - 추가
   Future<void> addPosts({
     required String userId,
     required String postType,
     required String title,
     required String content,
-    required String species,
-    required String breeds,
     required String gender,
     required String birth,
     required String weight,
     required String? imageUrl,
+    required int? breedsId,
   }) async {
     try {
       await postsSupabaseDataSource.addPostsWithDio(
@@ -59,12 +90,11 @@ class PostsRepository {
         postType: postType,
         title: title,
         content: content,
-        species: species,
-        breeds: breeds,
         gender: gender,
         birth: birth,
         weight: weight,
         imageUrl: imageUrl,
+        breedsId: breedsId,
       );
     } catch (e) {
       print("🚨 PostsRepository.addPosts 에러: $e");
@@ -78,12 +108,11 @@ class PostsRepository {
     required String postType,
     required String title,
     required String content,
-    required String species,
-    required String breeds,
     required String gender,
     required String birth,
     required String weight,
     required String? imageUrl,
+    required int? breedsId,
   }) async {
     try {
       await postsSupabaseDataSource.updatePostsWithDio(
@@ -91,12 +120,11 @@ class PostsRepository {
         postType: postType,
         title: title,
         content: content,
-        species: species,
-        breeds: breeds,
         gender: gender,
         birth: birth,
         weight: weight,
         imageUrl: imageUrl,
+        breedsId: breedsId,
       );
     } catch (e) {
       print("🚨 PostsRepository.updatePosts 에러: $e");

@@ -3,8 +3,8 @@ class HomePost {
   final String postType;
   final String title;
   final String content;
-  final String species;
-  final String breeds;
+  final String? species; // Made nullable
+  final String? breeds; // Made nullable
   final String gender;
   final String birth;
   final String weight;
@@ -12,15 +12,15 @@ class HomePost {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
-  final String userName;
+  final String? userName;
 
   HomePost({
     required this.id,
     required this.postType,
     required this.title,
     required this.content,
-    required this.species,
-    required this.breeds,
+    this.species, // No longer required
+    this.breeds, // No longer required
     required this.gender,
     required this.birth,
     required this.weight,
@@ -28,17 +28,21 @@ class HomePost {
     required this.createdAt,
     this.updatedAt,
     this.deletedAt,
-    required this.userName,
+    this.userName, // Made nullable
   });
 
   factory HomePost.fromJson(Map<String, dynamic> json) {
+    final breedsData = json['breeds'];
+    final speciesData = breedsData?['species'];
+
     return HomePost(
       id: json['id'],
       postType: json['post_type'],
       title: json['title'],
       content: json['content'],
-      species: json['species'],
-      breeds: json['breeds'],
+      species:
+          speciesData?['species_name'] as String?, // Parse from nested join
+      breeds: breedsData?['breeds_name'] as String?, // Parse from nested join
       gender: json['gender'],
       birth: json['birth'],
       weight: json['weight'],
