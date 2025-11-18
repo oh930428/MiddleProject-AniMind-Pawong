@@ -25,8 +25,10 @@ class PostAddScreen extends StatelessWidget {
             appBar: AppBar(title: Text(postItem == null ? '게시글 추가' : '게시글 수정')),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () async {
-                await viewModel.savePost(context);
-                context.go("/posts");
+                final success = await viewModel.savePost(context);
+                if (success) {
+                  context.go("/posts");
+                }
               },
               label: Text(postItem == null ? '저장' : '수정'),
               icon: const Icon(Icons.save),
@@ -183,12 +185,18 @@ class PostAddScreen extends StatelessWidget {
   ) {
     return DropdownButtonFormField<PostFilterSpecies>(
       value: viewModel.selectedSpeciesObject,
-      items: viewModel.speciesList.map((species) {
-        return DropdownMenuItem<PostFilterSpecies>(
-          value: species,
-          child: Text(species.speciesName),
-        );
-      }).toList(),
+      items: [
+        const DropdownMenuItem<PostFilterSpecies>(
+          value: null,
+          child: Text('종'),
+        ),
+        ...viewModel.speciesList.map((species) {
+          return DropdownMenuItem<PostFilterSpecies>(
+            value: species,
+            child: Text(species.speciesName),
+          );
+        }).toList(),
+      ],
       onChanged: (value) => viewModel.setSelectedSpecies(value),
       decoration: _inputDecoration('종', Icons.category),
       validator: (value) => value == null ? '종을 선택해주세요.' : null,
@@ -201,9 +209,12 @@ class PostAddScreen extends StatelessWidget {
   ) {
     return DropdownButtonFormField<Breed>(
       value: viewModel.selectedBreedObject,
-      items: viewModel.breedsList.map((breed) {
-        return DropdownMenuItem<Breed>(value: breed, child: Text(breed.name));
-      }).toList(),
+      items: [
+        const DropdownMenuItem<Breed>(value: null, child: Text('품종')),
+        ...viewModel.breedsList.map((breed) {
+          return DropdownMenuItem<Breed>(value: breed, child: Text(breed.name));
+        }).toList(),
+      ],
       onChanged: (value) => viewModel.setSelectedBreed(value),
       decoration: _inputDecoration('품종', Icons.star),
       validator: (value) => value == null ? '품종을 선택해주세요.' : null,

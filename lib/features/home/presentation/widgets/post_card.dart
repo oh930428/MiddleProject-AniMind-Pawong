@@ -37,7 +37,9 @@ class PostCard extends StatelessWidget {
                 // 이미지
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: recentPost.imageUrl?.isNotEmpty == true
+                  child:
+                      recentPost.imageUrl != null ||
+                          recentPost.imageUrl!.isEmpty
                       ? Image.network(
                           recentPost.imageUrl!,
                           width: 100,
@@ -117,7 +119,6 @@ class PostCard extends StatelessWidget {
                           const SizedBox(width: 4),
 
                           Flexible(
-                            // Reverted to Flexible
                             child: Text(
                               "${recentPost.userName} · ${recentPost.createdAt.getTimeAgo()}",
                               style: const TextStyle(
@@ -135,7 +136,6 @@ class PostCard extends StatelessWidget {
 
                       // 게시물 제목
                       Flexible(
-                        // Reverted to Flexible
                         child: Text(
                           recentPost.title,
                           style: TextStyle(
@@ -150,7 +150,6 @@ class PostCard extends StatelessWidget {
 
                       // 게시글 내용
                       Flexible(
-                        // Reverted to Flexible
                         child: Text(
                           recentPost.content,
                           maxLines: 2,

@@ -3,8 +3,8 @@ class HomePost {
   final String postType;
   final String title;
   final String content;
-  final String? species; // Made nullable
-  final String? breeds; // Made nullable
+  final String? species;
+  final String? breeds;
   final String gender;
   final String birth;
   final String weight;
@@ -19,8 +19,8 @@ class HomePost {
     required this.postType,
     required this.title,
     required this.content,
-    this.species, // No longer required
-    this.breeds, // No longer required
+    this.species,
+    this.breeds,
     required this.gender,
     required this.birth,
     required this.weight,
@@ -28,7 +28,7 @@ class HomePost {
     required this.createdAt,
     this.updatedAt,
     this.deletedAt,
-    this.userName, // Made nullable
+    this.userName,
   });
 
   factory HomePost.fromJson(Map<String, dynamic> json) {
@@ -40,9 +40,8 @@ class HomePost {
       postType: json['post_type'],
       title: json['title'],
       content: json['content'],
-      species:
-          speciesData?['species_name'] as String?, // Parse from nested join
-      breeds: breedsData?['breeds_name'] as String?, // Parse from nested join
+      species: speciesData?['species_name'] as String?,
+      breeds: breedsData?['breeds_name'] as String?,
       gender: json['gender'],
       birth: json['birth'],
       weight: json['weight'],
