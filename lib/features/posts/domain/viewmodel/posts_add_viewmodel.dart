@@ -54,7 +54,6 @@ class PostsAddViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  // Getters
   String get selectedGender => _selectedGender;
   String get selectedPostType => _selectedPostType;
   PostFilterSpecies? get selectedSpeciesObject => _selectedSpeciesObject;
@@ -65,7 +64,6 @@ class PostsAddViewModel extends ChangeNotifier {
   List<PostFilterSpecies> get speciesList => _speciesList;
   List<Breed> get breedsList => _breedsList;
 
-  // Setters
   void setSelectedGender(String? value) {
     if (value != null) {
       _selectedGender = value;
@@ -81,19 +79,19 @@ class PostsAddViewModel extends ChangeNotifier {
   }
 
   void setSelectedSpecies(PostFilterSpecies? value) {
+    _selectedSpeciesObject = value;
+    _selectedBreedObject = null;
     if (value != null) {
-      _selectedSpeciesObject = value;
-      _selectedBreedObject = null;
       _loadBreeds(value.id);
-      notifyListeners();
+    } else {
+      _breedsList = [];
     }
+    notifyListeners();
   }
 
   void setSelectedBreed(Breed? value) {
-    if (value != null) {
-      _selectedBreedObject = value;
-      notifyListeners();
-    }
+    _selectedBreedObject = value;
+    notifyListeners();
   }
 
   Future<void> pickImage() async {
@@ -137,12 +135,6 @@ class PostsAddViewModel extends ChangeNotifier {
           (breed) => breed.name == postItem!.breeds,
           orElse: () => _breedsList.first,
         );
-      } else if (_speciesList.isNotEmpty) {
-        _selectedSpeciesObject = _speciesList.first;
-        await _loadBreeds(_selectedSpeciesObject!.id);
-        if (_breedsList.isNotEmpty) {
-          _selectedBreedObject = _breedsList.first;
-        }
       }
     } catch (e) {
     } finally {
@@ -160,9 +152,29 @@ class PostsAddViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> savePost(BuildContext context) async {
+  Future<bool> savePost(BuildContext context) async {
     if (!formKey.currentState!.validate()) {
-      return;
+      return false;
+    }
+
+    if (_selectedSpeciesObject == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('종을 선택해주세요.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+
+    if (_selectedBreedObject == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('품종을 선택해주세요.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
     }
 
     _isLoading = true;
@@ -177,7 +189,7 @@ class PostsAddViewModel extends ChangeNotifier {
             backgroundColor: Colors.red,
           ),
         );
-        return;
+        return false;
       }
 
       String? finalImageUrl = _imageUrl;
@@ -213,6 +225,7 @@ class PostsAddViewModel extends ChangeNotifier {
           breedsId: _selectedBreedObject?.id,
         );
       }
+      return true;
     } catch (e, s) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -220,6 +233,7 @@ class PostsAddViewModel extends ChangeNotifier {
           backgroundColor: Colors.red,
         ),
       );
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();
