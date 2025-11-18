@@ -151,10 +151,22 @@ class _PetProfileView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('등록된 반려동물이 없습니다.'),
+            const Text(
+              '등록된 반려동물이 없습니다.',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => _navigateToAddEditScreen(context, null),
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Color(0xFF66CDAA)),
+                foregroundColor: MaterialStatePropertyAll(Colors.white),
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
               child: const Text('첫 반려동물 추가하기'),
             ),
           ],
