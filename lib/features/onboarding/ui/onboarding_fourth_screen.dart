@@ -13,9 +13,9 @@ class OnboardingFourthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC7F3EE),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFC7F3EE),
+        backgroundColor: Colors.white,
         title: Text("마무리 단계", style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),

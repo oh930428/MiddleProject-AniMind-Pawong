@@ -13,9 +13,9 @@ class OnboardingThirdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC7F3EE),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFC7F3EE),
+        backgroundColor: Colors.white,
         title: Text(
           "반려동물의 병원 기록 홍보",
           style: TextStyle(fontWeight: FontWeight.bold),

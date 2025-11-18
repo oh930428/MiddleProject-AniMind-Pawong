@@ -13,9 +13,9 @@ class OnboardingFirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC7F3EE),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFC7F3EE),
+        backgroundColor: Colors.white,
         title: Text(
           "Animind 앱 소개",
           style: TextStyle(fontWeight: FontWeight.bold),

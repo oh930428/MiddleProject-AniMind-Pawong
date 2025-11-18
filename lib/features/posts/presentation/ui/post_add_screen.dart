@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:middleproject_animind_pawong/features/home/domain/entities/home_posts.dart';
-import 'package:middleproject_animind_pawong/features/posts/data/repositories/posts_repository.dart';
-import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../home/domain/entities/home_posts.dart';
+import '../../data/repositories/posts_repository.dart';
+import '../../domain/viewmodel/posts_viewmodel.dart';
 
 class PostAddScreen extends StatelessWidget {
   final HomePost? postItem;
@@ -41,7 +41,6 @@ class _PostsBodyState extends State<_PostsBody> {
   late final TextEditingController _contentController;
   late final TextEditingController _birthController;
   late final TextEditingController _weightController;
-  late final TextEditingController _imageUrlController;
 
   late String _selectedGender = widget.postItem?.gender ?? '남아';
   late String _selectedPostType = widget.postItem?.postType ?? 'post';
@@ -68,9 +67,10 @@ class _PostsBodyState extends State<_PostsBody> {
     _weightController = TextEditingController(
       text: widget.postItem?.weight ?? '',
     );
-    _imageUrlController = TextEditingController(
-      text: widget.postItem?.imageUrl ?? '',
-    );
+    _selectedGender = widget.postItem?.gender ?? '남아';
+    _selectedPostType = widget.postItem?.postType ?? 'post';
+    _selectedSpecies = widget.postItem?.species ?? '강아지';
+    _selectedBreeds = widget.postItem?.breeds ?? '진돗개';
   }
 
   @override
@@ -79,16 +79,7 @@ class _PostsBodyState extends State<_PostsBody> {
     _contentController.dispose();
     _birthController.dispose();
     _weightController.dispose();
-    _imageUrlController.dispose();
     super.dispose();
-  }
-
-  ImageProvider? _getImageProvider() {
-    if (_pickedImage != null) return FileImage(_pickedImage!);
-    if (_imageUrl != null && _imageUrl!.isNotEmpty) {
-      return NetworkImage(_imageUrl!);
-    }
-    return null;
   }
 
   Future<void> _pickImage() async {
@@ -98,7 +89,7 @@ class _PostsBodyState extends State<_PostsBody> {
     if (pickedFile != null) {
       setState(() {
         _pickedImage = File(pickedFile.path);
-        _imageUrlController.text = '';
+        _imageUrl = null; // Clear network image if a new image is picked
       });
     }
   }
@@ -120,19 +111,21 @@ class _PostsBodyState extends State<_PostsBody> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(widget.postItem == null ? "게시글 추가" : "게시글 수정"),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+
           final postId = widget.postItem?.id;
 
+          String? finalImageUrl = _imageUrl;
           if (_pickedImage != null) {
-            _imageUrl = await context.read<PostsViewModel>().uploadImage(
+            finalImageUrl = await context.read<PostsViewModel>().uploadImage(
               pickedImage: _pickedImage!,
             );
           }
@@ -147,7 +140,7 @@ class _PostsBodyState extends State<_PostsBody> {
               gender: _selectedGender,
               birth: _birthController.text,
               weight: _weightController.text,
-              imageUrl: _imageUrl,
+              imageUrl: finalImageUrl,
             );
           } else {
             await context.read<PostsViewModel>().updatePosts(
@@ -160,7 +153,7 @@ class _PostsBodyState extends State<_PostsBody> {
               gender: _selectedGender,
               birth: _birthController.text,
               weight: _weightController.text,
-              imageUrl: _imageUrl,
+              imageUrl: finalImageUrl,
             );
           }
           context.go("/posts");
@@ -169,242 +162,47 @@ class _PostsBodyState extends State<_PostsBody> {
         icon: const Icon(Icons.save),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Consumer<PostsViewModel>(
-            builder: (context, viewModel, _) {
-              return SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20),
+                _buildImagePicker(context),
+                const SizedBox(height: 20),
+                Card(
+                  color: Colors.white,
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      spacing: 16,
                       children: [
-                        // 이미지
-                        Builder(
-                          builder: (context) {
-                            final imageProvider = _getImageProvider();
-                            return Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: AppColors.border,
-                                  backgroundImage: imageProvider,
-                                  onBackgroundImageError: imageProvider != null
-                                      ? (e, s) {
-                                          print('Image load error: $e\n$s');
-                                        }
-                                      : null,
-                                  child: imageProvider == null
-                                      ? const Icon(
-                                          Icons.pets,
-                                          size: 60,
-                                          color: Colors.white,
-                                        )
-                                      : null,
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.camera_alt,
-                                      color: AppColors.primary,
-                                    ),
-                                    onPressed: _pickImage,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-
-                        // 게시글 타입
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "게시글 타입",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: RadioListTile<String>(
-                                    title: const Text('게시글'),
-                                    value: 'post',
-                                    groupValue: _selectedPostType,
-                                    onChanged: (value) {
-                                      setState(
-                                        () => _selectedPostType = value!,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  child: RadioListTile<String>(
-                                    title: const Text('Q&A'),
-                                    value: 'Q&A',
-                                    groupValue: _selectedPostType,
-                                    onChanged: (value) {
-                                      setState(
-                                        () => _selectedPostType = value!,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        // 제목
+                        _buildPostTypeRadio(),
+                        const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _titleController,
                           labelText: '제목',
                           icon: Icons.note,
                           maxLines: 3,
                         ),
-
-                        // 내용
+                        const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _contentController,
                           labelText: '내용',
                           icon: Icons.note,
                           maxLines: 6,
                         ),
-
-                        // 종
-                        DropdownMenu<String>(
-                          width: screenWidth,
-                          initialSelection: _selectedSpecies,
-                          label: const Text('종 선택'),
-                          onSelected: (value) =>
-                              setState(() => _selectedSpecies = value!),
-                          menuStyle: MenuStyle(
-                            alignment: AlignmentDirectional.bottomStart,
-                            shape: WidgetStatePropertyAll(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                          dropdownMenuEntries: [
-                            DropdownMenuEntry(
-                              value: '강아지',
-                              label: '강아지',
-                              labelWidget: SizedBox(
-                                width: screenWidth * 0.8,
-                                child: Text("강아지"),
-                              ),
-                            ),
-                            DropdownMenuEntry(
-                              value: '고양이',
-                              label: '고양이',
-                              labelWidget: SizedBox(
-                                width: screenWidth * 0.8,
-                                child: Text("고양이"),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // 품종
-                        DropdownMenu<String>(
-                          width: screenWidth,
-                          initialSelection: _selectedBreeds,
-                          label: Text('품종 선택'),
-                          onSelected: (value) =>
-                              setState(() => _selectedBreeds = value!),
-                          menuStyle: MenuStyle(
-                            alignment: AlignmentDirectional.bottomStart,
-                            shape: WidgetStatePropertyAll(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                          dropdownMenuEntries: [
-                            DropdownMenuEntry(
-                              value: '진돗개',
-                              label: '진돗개',
-                              labelWidget: SizedBox(
-                                width: screenWidth * 0.8,
-                                child: Text("진돗개"),
-                              ),
-                            ),
-                            DropdownMenuEntry(
-                              value: '리트리버',
-                              label: '리트리버',
-                              labelWidget: SizedBox(
-                                width: screenWidth * 0.8,
-                                child: Text("리트리버"),
-                              ),
-                            ),
-                            DropdownMenuEntry(
-                              value: '시베리안 허스키',
-                              label: '시베리안 허스키',
-                              labelWidget: SizedBox(
-                                width: screenWidth * 0.8,
-                                child: Text("시베리안 허스키"),
-                              ),
-                            ),
-                            DropdownMenuEntry(
-                              value: '푸들',
-                              label: '푸들',
-                              labelWidget: SizedBox(
-                                width: screenWidth * 0.8,
-                                child: Text("푸들"),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // 셩별
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "성별",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: RadioListTile<String>(
-                                    title: const Text('남아'),
-                                    value: '남아',
-                                    groupValue: _selectedGender,
-                                    onChanged: (value) {
-                                      setState(() => _selectedGender = value!);
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  child: RadioListTile<String>(
-                                    title: const Text('여아'),
-                                    value: '여아',
-                                    groupValue: _selectedGender,
-                                    onChanged: (value) {
-                                      setState(() => _selectedGender = value!);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        // 생일
+                        const SizedBox(height: 16),
+                        _buildSpeciesDropdown(),
+                        const SizedBox(height: 16),
+                        _buildBreedsDropdown(),
+                        const SizedBox(height: 16),
+                        _buildGenderRadio(),
+                        const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _birthController,
                           labelText: '생일 (YYYY-MM-DD)',
@@ -412,8 +210,7 @@ class _PostsBodyState extends State<_PostsBody> {
                           readOnly: true,
                           onTap: () => _selectDate(context, _birthController),
                         ),
-
-                        // 몸무게
+                        const SizedBox(height: 16),
                         _buildTextFormField(
                           controller: _weightController,
                           labelText: '몸무게',
@@ -424,9 +221,183 @@ class _PostsBodyState extends State<_PostsBody> {
                     ),
                   ),
                 ),
-              );
-            },
+                const SizedBox(height: 80),
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePicker(BuildContext context) {
+    ImageProvider? imageProvider;
+    if (_pickedImage != null) {
+      imageProvider = FileImage(_pickedImage!);
+    } else if (_imageUrl != null && _imageUrl!.isNotEmpty) {
+      imageProvider = NetworkImage(_imageUrl!);
+    }
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: 60,
+          backgroundColor: AppColors.border,
+          backgroundImage: imageProvider,
+          child: imageProvider == null
+              ? const Icon(Icons.pets, size: 60, color: Colors.white)
+              : null,
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: IconButton(
+            icon: const Icon(Icons.camera_alt, color: AppColors.primary),
+            onPressed: _pickImage,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPostTypeRadio() {
+    return InputDecorator(
+      decoration: _inputDecoration(
+        '게시글 타입',
+        Icons.article,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      ),
+      child: SizedBox(
+        height: 48,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('게시글'),
+                value: 'post',
+                groupValue: _selectedPostType,
+                onChanged: (value) {
+                  setState(() => _selectedPostType = value!);
+                },
+                dense: true,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('Q&A'),
+                value: 'Q&A',
+                groupValue: _selectedPostType,
+                onChanged: (value) {
+                  setState(() => _selectedPostType = value!);
+                },
+                dense: true,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSpeciesDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _selectedSpecies,
+      items: const [
+        DropdownMenuItem<String>(value: '강아지', child: Text('강아지')),
+        DropdownMenuItem<String>(value: '고양이', child: Text('고양이')),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _selectedSpecies = value!;
+          if (_selectedSpecies == '강아지' &&
+              !['진돗개', '리트리버', '시베리안 허스키', '푸들'].contains(_selectedBreeds)) {
+            _selectedBreeds = '진돗개';
+          } else if (_selectedSpecies == '고양이' &&
+              !['코리안 숏헤어', '페르시안', '샴', '러시안 블루'].contains(_selectedBreeds)) {
+            _selectedBreeds = '코리안 숏헤어';
+          }
+        });
+      },
+      decoration: _inputDecoration('종', Icons.category),
+      validator: (value) =>
+          value == null || value.isEmpty ? '종을 선택해주세요.' : null,
+    );
+  }
+
+  Widget _buildBreedsDropdown() {
+    List<DropdownMenuItem<String>> breedItems;
+
+    if (_selectedSpecies == '강아지') {
+      breedItems = const [
+        DropdownMenuItem<String>(value: '진돗개', child: Text('진돗개')),
+        DropdownMenuItem<String>(value: '리트리버', child: Text('리트리버')),
+        DropdownMenuItem<String>(value: '시베리안 허스키', child: Text('시베리안 허스키')),
+        DropdownMenuItem<String>(value: '푸들', child: Text('푸들')),
+      ];
+    } else if (_selectedSpecies == '고양이') {
+      breedItems = const [
+        DropdownMenuItem<String>(value: '코리안 숏헤어', child: Text('코리안 숏헤어')),
+        DropdownMenuItem<String>(value: '페르시안', child: Text('페르시안')),
+        DropdownMenuItem<String>(value: '샴', child: Text('샴')),
+        DropdownMenuItem<String>(value: '러시안 블루', child: Text('러시안 블루')),
+      ];
+    } else {
+      breedItems = const [];
+    }
+
+    return DropdownButtonFormField<String>(
+      value: _selectedBreeds,
+      items: breedItems,
+      onChanged: (value) {
+        setState(() {
+          _selectedBreeds = value!;
+        });
+      },
+      decoration: _inputDecoration('품종', Icons.star),
+      validator: (value) =>
+          value == null || value.isEmpty ? '품종을 선택해주세요.' : null,
+    );
+  }
+
+  Widget _buildGenderRadio() {
+    return InputDecorator(
+      decoration: _inputDecoration(
+        '성별',
+        Icons.wc,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      ),
+      child: SizedBox(
+        height: 48,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('남아'),
+                value: '남아',
+                groupValue: _selectedGender,
+                onChanged: (value) {
+                  setState(() => _selectedGender = value!);
+                },
+                dense: true,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('여아'),
+                value: '여아',
+                groupValue: _selectedGender,
+                onChanged: (value) {
+                  setState(() => _selectedGender = value!);
+                },
+                dense: true,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -447,15 +418,7 @@ class _PostsBodyState extends State<_PostsBody> {
       readOnly: readOnly,
       maxLines: maxLines,
       onTap: onTap,
-      decoration: InputDecoration(
-        labelText: labelText,
-        prefixIcon: Icon(icon, color: AppColors.primary),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
-        ),
-      ),
+      decoration: _inputDecoration(labelText, icon),
       validator: (value) {
         if (value == null || value.isEmpty) {
           if (labelText.contains('(선택)')) {
@@ -465,6 +428,23 @@ class _PostsBodyState extends State<_PostsBody> {
         }
         return null;
       },
+    );
+  }
+
+  InputDecoration _inputDecoration(
+    String labelText,
+    IconData icon, {
+    EdgeInsetsGeometry? contentPadding,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      prefixIcon: Icon(icon, color: AppColors.primary),
+      contentPadding: contentPadding,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      ),
     );
   }
 }

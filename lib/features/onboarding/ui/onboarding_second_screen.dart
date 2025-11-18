@@ -13,9 +13,9 @@ class OnboardingSecondScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC7F3EE),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFC7F3EE),
+        backgroundColor: Colors.white,
         title: Text(
           "게시글 및 Q&A 홍보",
           style: TextStyle(fontWeight: FontWeight.bold),

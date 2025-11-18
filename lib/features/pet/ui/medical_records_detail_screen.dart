@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:middleproject_animind_pawong/features/pet/domain/entities/medical_records.dart';
+
+import '../domain/entities/medical_records.dart';
 
 class MedicalRecordsDetailScreen extends StatelessWidget {
   final MedicalRecords record;
@@ -48,12 +49,6 @@ class MedicalRecordsDetailScreen extends StatelessWidget {
                         const SizedBox(height: 16),
 
                         _buildDetailRow(
-                          label: '방문 이유',
-                          value: record.visitReason,
-                        ),
-                        const Divider(height: 24),
-
-                        _buildDetailRow(
                           label: '방문 날짜',
                           value: record.visitedat != null
                               ? DateFormat(
@@ -70,6 +65,30 @@ class MedicalRecordsDetailScreen extends StatelessWidget {
                                   'yyyy-MM-dd',
                                 ).format(record.nextVisitat!)
                               : '정보 없음',
+                        ),
+                        const Divider(height: 32),
+
+                        Text(
+                          '방문 이유',
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(
+                            (record.visitReason?.isNotEmpty ?? false)
+                                ? record.visitReason!
+                                : '방문 이유가 없습니다.',
+                            style: textTheme.bodyMedium,
+                          ),
                         ),
                         const Divider(height: 32),
 
