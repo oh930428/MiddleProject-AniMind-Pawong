@@ -41,7 +41,7 @@ class OnboardingFirstScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   await _saveOnboardingStatus();
-                  context.go("/onboarding2");
+                  context.push("/onboarding2");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

@@ -21,6 +21,14 @@ class OnboardingSecondScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            }
+          },
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -41,7 +49,7 @@ class OnboardingSecondScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   await _saveOnboardingStatus();
-                  context.go("/onboarding3");
+                  context.push("/onboarding3");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

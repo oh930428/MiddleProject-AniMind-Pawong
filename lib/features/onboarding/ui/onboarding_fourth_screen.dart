@@ -18,6 +18,14 @@ class OnboardingFourthScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Text("마무리 단계", style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            }
+          },
+        ),
       ),
       body: SafeArea(
         child: Column(
