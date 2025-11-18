@@ -37,9 +37,7 @@ class PostCard extends StatelessWidget {
                 // 이미지
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child:
-                      recentPost.imageUrl != null ||
-                          recentPost.imageUrl!.isEmpty
+                  child: recentPost.imageUrl?.isNotEmpty == true
                       ? Image.network(
                           recentPost.imageUrl!,
                           width: 100,
@@ -60,41 +58,47 @@ class PostCard extends StatelessWidget {
                       // 게시글 타입 및 종, 품종
                       Row(
                         children: [
-                          Chip(
-                            label: Text(
-                              recentPost.postType,
-                              style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w800,
+                          Flexible(
+                            child: Chip(
+                              label: Text(
+                                recentPost.postType,
+                                style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            side: BorderSide.none,
-                            padding: EdgeInsets.zero,
-                            backgroundColor: const Color(0xFFC8F2E3),
-                            visualDensity: VisualDensity(
-                              horizontal: 0,
-                              vertical: -4,
+                              side: BorderSide.none,
+                              padding: EdgeInsets.zero,
+                              backgroundColor: const Color(0xFFC8F2E3),
+                              visualDensity: VisualDensity(
+                                horizontal: 0,
+                                vertical: -4,
+                              ),
                             ),
                           ),
 
-                          const SizedBox(height: 6),
+                          const SizedBox(width: 6),
 
-                          Chip(
-                            label: Text(
-                              "${recentPost.species} · ${recentPost.breeds}",
-                              style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w800,
+                          Flexible(
+                            child: Chip(
+                              label: Text(
+                                "${recentPost.species} · ${recentPost.breeds}",
+                                style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            side: BorderSide.none,
-                            padding: EdgeInsets.zero,
-                            backgroundColor: Color(0xFFBEE3FF),
-                            visualDensity: VisualDensity(
-                              horizontal: 0,
-                              vertical: -4,
+                              side: BorderSide.none,
+                              padding: EdgeInsets.zero,
+                              backgroundColor: Color(0xFFBEE3FF),
+                              visualDensity: VisualDensity(
+                                horizontal: 0,
+                                vertical: -4,
+                              ),
                             ),
                           ),
                         ],
@@ -112,12 +116,16 @@ class PostCard extends StatelessWidget {
 
                           const SizedBox(width: 4),
 
-                          Text(
-                            "${recentPost.userName} · ${recentPost.createdAt.getTimeAgo()}",
-                            style: const TextStyle(
-                              color: Colors.black38,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
+                          Flexible(
+                            // Reverted to Flexible
+                            child: Text(
+                              "${recentPost.userName} · ${recentPost.createdAt.getTimeAgo()}",
+                              style: const TextStyle(
+                                color: Colors.black38,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -126,24 +134,31 @@ class PostCard extends StatelessWidget {
                       const SizedBox(height: 8),
 
                       // 게시물 제목
-                      Text(
-                        recentPost.title,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
+                      Flexible(
+                        // Reverted to Flexible
+                        child: Text(
+                          recentPost.title,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
 
                       const SizedBox(height: 4),
 
                       // 게시글 내용
-                      Text(
-                        recentPost.content,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                      Flexible(
+                        // Reverted to Flexible
+                        child: Text(
+                          recentPost.content,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],

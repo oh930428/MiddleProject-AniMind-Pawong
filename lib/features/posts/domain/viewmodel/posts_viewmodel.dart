@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -31,12 +29,14 @@ class PostsViewModel extends ChangeNotifier {
   // 종 선택
   void setSpecies(String value) {
     selectedSpecies = value;
+
     _applyFilters();
   }
 
   // 게시글 타입 선택
   void setPostType(String value) {
     selectedPostType = value;
+
     _applyFilters();
   }
 
@@ -49,23 +49,8 @@ class PostsViewModel extends ChangeNotifier {
           selectedPostType == "전체" || post.postType == selectedPostType;
       return matchSpecies && matchType;
     }).toList();
+
     notifyListeners();
-  }
-
-  Future<String> uploadImage({required File pickedImage}) async {
-    final bytes = await pickedImage.readAsBytes();
-
-    final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-
-    await Supabase.instance.client.storage
-        .from('pet_image') // 생성한 버킷 이름
-        .uploadBinary(fileName, bytes);
-
-    final String publicUrl = Supabase.instance.client.storage
-        .from('pet_image')
-        .getPublicUrl(fileName);
-
-    return publicUrl;
   }
 
   // 서버에서 전체 데이터 로드
@@ -75,13 +60,16 @@ class PostsViewModel extends ChangeNotifier {
 
     try {
       _species = await _postsRepository.getSpecies();
+
       _allPosts = await _postsRepository.getAllPosts();
+
       _applyFilters(); // 로컬 필터 적용
     } catch (e) {
       _allPosts = [];
       _posts = [];
     } finally {
       isLoading = false;
+
       notifyListeners();
     }
   }
@@ -93,38 +81,40 @@ class PostsViewModel extends ChangeNotifier {
 
   // 게시글 - 추가
   Future<void> addPosts({
+    required String userId,
     required String postType,
     required String title,
     required String content,
-    required String species,
-    required String breeds,
     required String gender,
     required String birth,
     required String weight,
     required String? imageUrl,
+    required int? breedsId,
   }) async {
     try {
       isLoading = true;
       notifyListeners();
 
-      final userId = Supabase.instance.client.auth.currentSession!.user.id;
+      final currentUserId =
+          Supabase.instance.client.auth.currentSession?.user?.id;
+      if (currentUserId == null) {
+        return;
+      }
 
       await _postsRepository.addPosts(
-        userId: userId,
+        userId: currentUserId,
         postType: postType,
         title: title,
         content: content,
-        species: species,
-        breeds: breeds,
         gender: gender,
         birth: birth,
         weight: weight,
         imageUrl: imageUrl,
+        breedsId: breedsId,
       );
 
       await loadInitialPosts();
     } catch (e) {
-      debugPrint("게시글 추가 실패: $e");
       rethrow;
     } finally {
       isLoading = false;
@@ -138,12 +128,11 @@ class PostsViewModel extends ChangeNotifier {
     required String postType,
     required String title,
     required String content,
-    required String species,
-    required String breeds,
     required String gender,
     required String birth,
     required String weight,
     required String? imageUrl,
+    required int? breedsId,
   }) async {
     try {
       isLoading = true;
@@ -154,17 +143,15 @@ class PostsViewModel extends ChangeNotifier {
         postType: postType,
         title: title,
         content: content,
-        species: species,
-        breeds: breeds,
         gender: gender,
         birth: birth,
         weight: weight,
         imageUrl: imageUrl,
+        breedsId: breedsId,
       );
 
       await loadInitialPosts();
     } catch (e) {
-      debugPrint("게시글 수정 실패: $e");
       rethrow;
     } finally {
       isLoading = false;
@@ -182,7 +169,6 @@ class PostsViewModel extends ChangeNotifier {
 
       await loadInitialPosts();
     } catch (e) {
-      debugPrint("게시글 삭제 실패: $e");
       rethrow;
     } finally {
       isLoading = false;
