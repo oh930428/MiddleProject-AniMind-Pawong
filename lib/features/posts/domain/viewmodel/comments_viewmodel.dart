@@ -38,14 +38,19 @@ class CommentsViewModel extends ChangeNotifier {
   }
 
   // 답변 추가하기
-  Future<void> addComment(String content) async {
-    if (content.trim().isEmpty) return;
+  Future<bool> addComment(String content) async {
+    if (content.trim().isEmpty) return false;
 
     isSending = true;
     notifyListeners();
 
     try {
       await _commentsRepository.addComments(postId, content);
+      await loadInitialComments(postId);
+      return true;
+    } catch (e) {
+      debugPrint("🚨 답변 추가하기 실패: $e");
+      return false;
     } finally {
       isSending = false;
       notifyListeners();

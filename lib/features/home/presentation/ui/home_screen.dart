@@ -29,8 +29,21 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _HomeScreen extends StatelessWidget {
+class _HomeScreen extends StatefulWidget {
   const _HomeScreen();
+
+  @override
+  State<_HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<_HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HomeViewModel>().loadInitialHome();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,16 +200,19 @@ class _RecentMedicalRecordsSection extends StatelessWidget {
         ),
 
         // 병원기록 카드
-        Container(
-          constraints: BoxConstraints(minHeight: 120),
-          child: medicalRecords.isEmpty
-              ? const Center(
+        medicalRecords.isEmpty
+            ? SizedBox(
+                height: 100,
+                child: const Center(
                   child: Text(
                     "병원기록이 없습니다.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                )
-              : ListView.builder(
+                ),
+              )
+            : SizedBox(
+                height: 100,
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: medicalRecords.length,
                   itemBuilder: (context, index) {
@@ -210,7 +226,7 @@ class _RecentMedicalRecordsSection extends StatelessWidget {
                     );
                   },
                 ),
-        ),
+              ),
       ],
     );
   }
@@ -244,22 +260,25 @@ class _RecentPostListSection extends StatelessWidget {
         ),
 
         // 내가 작성한 게시글 카드
-        Container(
-          constraints: BoxConstraints(minHeight: 200),
-          child: recentPost.isEmpty
-              ? const Center(
+        recentPost.isEmpty
+            ? SizedBox(
+                height: 240,
+                child: Center(
                   child: Text(
                     "내가 작성한 게시글이 없습니다.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                )
-              : ListView.builder(
+                ),
+              )
+            : SizedBox(
+                height: 400,
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: recentPost.length,
                   itemBuilder: (context, index) {
                     final _recentPost = recentPost[index];
                     return Padding(
-                      padding: const EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.only(right: 8),
                       child: SizedBox(
                         width: screenWidth * 0.85,
                         child: PostCard(recentPost: _recentPost),
@@ -267,7 +286,7 @@ class _RecentPostListSection extends StatelessWidget {
                     );
                   },
                 ),
-        ),
+              ),
       ],
     );
   }

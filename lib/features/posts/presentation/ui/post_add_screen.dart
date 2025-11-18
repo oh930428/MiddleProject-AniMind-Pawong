@@ -8,6 +8,7 @@ import '../../data/repositories/posts_repository.dart';
 import '../../domain/entities/breed.dart';
 import '../../domain/entities/post_filter_species.dart';
 import '../../domain/viewmodel/posts_add_viewmodel.dart';
+import '../../domain/viewmodel/posts_viewmodel.dart';
 
 class PostAddScreen extends StatelessWidget {
   final HomePost? postItem;
@@ -26,7 +27,11 @@ class PostAddScreen extends StatelessWidget {
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () async {
                 final success = await viewModel.savePost(context);
+
                 if (success) {
+                  final postsVM = context.read<PostsViewModel>();
+                  await postsVM.loadInitialPosts();
+
                   context.go("/posts");
                 }
               },

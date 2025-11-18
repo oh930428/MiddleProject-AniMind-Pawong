@@ -306,14 +306,12 @@ class _SignupFormState extends State<_SignupForm> {
               ? null
               : () async {
                   if (!_formKey.currentState!.validate()) return;
-                  print(signupVM.showPrivacyError);
 
                   if (!signupVM.isPrivacyAgreed) {
                     signupVM.validatePrivacy();
                     print(signupVM.showPrivacyError);
                     return;
                   }
-                  print(signupVM.showPrivacyError);
 
                   await signupVM.signUp(
                     id: widget.authVM.userId ?? "",

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/comments_viewmodel.dart';
 import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -40,6 +41,7 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => PostsViewModel(context.read<PostsRepository>()),
         ),
+
         ChangeNotifierProvider(
           create: (context) =>
               NotificationViewModel(context.read<NotificationRepository>()),
