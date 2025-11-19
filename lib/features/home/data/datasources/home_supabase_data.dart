@@ -31,7 +31,7 @@ class HomeSupabaseDataSource {
       queryParameters: {
         "user_id": "eq.$userId",
         "select": "*,breeds(id,breeds_name,species(species_name))",
-        "order": "id.desc",
+        "order": "id.asc",
       },
     );
 
@@ -65,7 +65,7 @@ class HomeSupabaseDataSource {
       "$_baseUrl/posts",
       queryParameters: {
         "user_id": "eq.$userId",
-        "select": "*, users(name)",
+        "select": "*, users(name), breeds(breeds_name, species(species_name))",
         "order": "id.desc",
       },
     );

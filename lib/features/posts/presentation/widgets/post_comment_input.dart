@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../data/repositories/comments_repository.dart';
 import '../../domain/viewmodel/comments_viewmodel.dart';
 
 class PostCommentInput extends StatelessWidget {
@@ -11,16 +10,13 @@ class PostCommentInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) =>
-          CommentsViewModel(context.read<CommentsRepository>(), postId),
-      child: _PostCommentInput(),
-    );
+    return _PostCommentInput(postId: postId);
   }
 }
 
 class _PostCommentInput extends StatefulWidget {
-  const _PostCommentInput({super.key});
+  final int postId;
+  const _PostCommentInput({super.key, required this.postId});
 
   @override
   State<_PostCommentInput> createState() => _PostCommentInputState();
@@ -63,14 +59,18 @@ class _PostCommentInputState extends State<_PostCommentInput> {
           ),
 
           IconButton(
-            onPressed: () async {
-              final content = _commentInputcontroller.text.trim();
-              if (content.isEmpty) return;
+            onPressed: viewModel.isSending
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
 
-              await viewModel.addComment(content);
+                    final content = _commentInputcontroller.text.trim();
+                    if (content.isEmpty) return;
 
-              _commentInputcontroller.clear();
-            },
+                    await viewModel.addComment(content);
+
+                    _commentInputcontroller.clear();
+                  },
             style: IconButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: AppColors.primary,
@@ -81,7 +81,15 @@ class _PostCommentInputState extends State<_PostCommentInput> {
               ),
             ),
             icon: viewModel.isSending
-                ? const CircularProgressIndicator()
+                ? SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: const CircularProgressIndicator(
+                      color: Color(0xFFE7EBED),
+                      backgroundColor: Color(0xFF4BA487),
+                      strokeWidth: 6,
+                    ),
+                  )
                 : const Icon(Icons.send),
           ),
         ],

@@ -50,6 +50,7 @@ class PetSupabaseDataSource {
         queryParameters: {
           'user_id': 'eq.$userId',
           'select': '*,breeds!inner(*,species!inner(*))',
+          "order": "id.asc",
         },
       );
       final data = _handleResponse(response);

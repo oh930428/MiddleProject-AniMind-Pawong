@@ -12,17 +12,26 @@ class PostCommetsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) =>
-          CommentsViewModel(context.read<CommentsRepository>(), postId),
-      child: _PostCommentsSection(postId: postId),
-    );
+    return _PostCommentsSection(postId: postId);
   }
 }
 
-class _PostCommentsSection extends StatelessWidget {
+class _PostCommentsSection extends StatefulWidget {
   final int postId;
   const _PostCommentsSection({super.key, required this.postId});
+
+  @override
+  State<_PostCommentsSection> createState() => _PostCommentsSectionState();
+}
+
+class _PostCommentsSectionState extends State<_PostCommentsSection> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CommentsViewModel>().loadInitialComments(widget.postId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
