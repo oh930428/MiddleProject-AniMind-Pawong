@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:middleproject_animind_pawong/features/notification/domain/viewmodel/notification_viewmodel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/entities/notification.dart';
@@ -51,34 +53,28 @@ class NotificationSupabaseDataSource {
     );
   }
 
-  Stream<NotificationItem> subscribeNewNotifications() {
-    final controller = StreamController<NotificationItem>();
+  // NotificationSupabaseDataSource
+  RealtimeChannel? subscribeNewNotifications(Function(NotificationItem) onNew) {
     final supabase = Supabase.instance.client;
 
-    // Realtime 채널 생성 및 구독
-    final channel = supabase
+    return supabase
         .channel('notification_changes')
         .onPostgresChanges(
           event: PostgresChangeEvent.insert,
           schema: 'public',
-          table: 'notification',
+          table: 'notifications',
           filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq,
             column: 'to_user_id',
             value: _userId,
           ),
           callback: (payload) {
-            controller.add(NotificationItem.fromJson(payload.newRecord));
+            final newNotification = NotificationItem.fromJson(
+              payload.newRecord,
+            );
+            onNew(newNotification); // 콜백 호출
           },
         )
         .subscribe();
-
-    // 스트림 종료 시 채널 제거 + 스트림 닫기
-    controller.onCancel = () {
-      supabase.removeChannel(channel);
-      controller.close();
-    };
-
-    return controller.stream;
   }
 }

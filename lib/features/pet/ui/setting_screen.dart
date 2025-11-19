@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:middleproject_animind_pawong/features/notification/domain/viewmodel/notification_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,6 +43,10 @@ class _SettingsScreenViewState extends State<_SettingsScreenView> {
     final theme = Theme.of(context);
     final settingViewModel = Provider.of<SettingViewModel>(context);
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    final notificationViewModel = Provider.of<NotificationViewModel>(
+      context,
+      listen: false,
+    );
     final userEmail = settingViewModel.userEmail;
 
     Future<void> _changeOrnboardingStatus() async {
@@ -130,6 +135,7 @@ class _SettingsScreenViewState extends State<_SettingsScreenView> {
                     subtitle: '다른 계정으로 로그인하기',
                     onTap: () async {
                       await authViewModel.logOut();
+                      await notificationViewModel.dispose;
                       if (mounted) {
                         context.go('/splash');
                       }

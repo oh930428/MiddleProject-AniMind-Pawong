@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:middleproject_animind_pawong/features/notification/data/repositories/notification_repository.dart';
 import 'package:middleproject_animind_pawong/features/posts/domain/viewmodel/posts_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -14,11 +13,7 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) =>
-          NotificationViewModel(context.read<NotificationRepository>()),
-      child: _NotificationScreen(),
-    );
+    return _NotificationScreen();
   }
 }
 
