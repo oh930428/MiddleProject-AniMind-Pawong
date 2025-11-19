@@ -1,3 +1,5 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../domain/entities/notification.dart';
 import '../datasources/notification_supabase_data.dart';
 
@@ -27,8 +29,8 @@ class NotificationRepository {
     }
   }
 
-  // 신규: 실시간 알림 구독
-  Stream<NotificationItem> subscribeNewNotifications() {
-    return notificationSupabaseDataSource.subscribeNewNotifications();
+  // 콜백 전달 방식
+  RealtimeChannel? subscribeNewNotifications(Function(NotificationItem) onNew) {
+    return notificationSupabaseDataSource.subscribeNewNotifications(onNew);
   }
 }
