@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:middleproject_animind_pawong/core/extensions/datetime_extensions.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -11,6 +12,10 @@ class HomeMedicalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String dataString(DateTime? nextVisitAt) {
+      return DateFormat('yyyy-MM-dd').format(record.nextVisitAt!);
+    }
+
     return Card(
       elevation: 0,
       margin: EdgeInsets.zero,
@@ -39,13 +44,16 @@ class HomeMedicalCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
-                    '다음 방문일: ${"${record.visitedAt.year}-${record.visitedAt.month.toString().padLeft(2, '0')}-${record.visitedAt.day.toString().padLeft(2, '0')}"}',
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+
+                  record.nextVisitAt != null
+                      ? Text(
+                          "다음 방문일: ${dataString(record.nextVisitAt)}",
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
