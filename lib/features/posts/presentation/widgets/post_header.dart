@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:middleproject_animind_pawong/core/extensions/datetime_extensions.dart';
+import 'package:middleproject_animind_pawong/core/extensions/string_extensions.dart';
 
 import '../../../home/domain/entities/home_posts.dart';
 
@@ -50,7 +51,7 @@ class PostHeader extends StatelessWidget {
               // 나이, 몸무게, 성별
               Chip(
                 label: Text(
-                  "3살 · ${postItem.weight}kg · ${postItem.gender}",
+                  "${postItem.birth.getAge()}살 · ${postItem.weight}kg · ${postItem.gender}",
                   style: const TextStyle(
                     color: Colors.black54,
                     fontSize: 12,
