@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dio/dio.dart';
+
+import '../entities/app_user.dart';
+
+final supabase = Supabase.instance.client;
+
+class AuthViewModel extends ChangeNotifier {
+  String? userId;
+  String? userEmail;
+
+  bool isLoading = false;
+
+  AuthViewModel() {
+    _listenAuthState();
+  }
+
+  void _listenAuthState() {
+    supabase.auth.onAuthStateChange.listen((data) {
+      final newUserId = data.session?.user.id;
+      final newUserEmail = data.session?.user.email;
+
+      if (newUserId != userId) {
+        userId = newUserId;
+        userEmail = newUserEmail;
+        notifyListeners();
+      }
+    });
+  }
+
+  // 구글 로그인
+  Future<String?> loginWithGoogle() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final scopes = ['email', 'profile'];
+      final googleSignIn = GoogleSignIn.instance;
+
+      await googleSignIn.initialize(
+        serverClientId: dotenv.get("GOOGLE_WEB_CLIENT_ID"),
+        // clientId: dotenv.get("GOOGLE_ANDROID_CLIENT_ID"),
+      );
+
+      final googleUser = await googleSignIn.authenticate();
+
+      if (googleUser == null) {
+        throw AuthException('Failed to sign in with Google.');
+      }
+
+      final authorization =
+          await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+          await googleUser.authorizationClient.authorizeScopes(scopes);
+
+      final idToken = googleUser.authentication.idToken;
+
+      if (idToken == null) {
+        throw AuthException('No ID Token found.');
+      }
+
+      await supabase.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+        accessToken: authorization.accessToken,
+      );
+
+      userId = supabase.auth.currentUser?.id;
+      userEmail = supabase.auth.currentUser?.email;
+      notifyListeners();
+
+      return userId; // ✅
+    } catch (e) {
+      debugPrint("Google 로그인 실패: $e");
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // 회원가입 한 유저 확인
+  Future<List<AppUser>> fetchUserById(String userId) async {
+    final dio = Dio();
+
+    final baseUrl = dotenv.get("SUPABASE_BASE_URL");
+    final supabaseKey = dotenv.get("SUPABASE_API_KEY");
+
+    try {
+      final response = await dio.get(
+        "$baseUrl/rest/v1/users",
+        options: Options(
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': "Bearer $supabaseKey",
+          },
+        ),
+        queryParameters: {'select': '*', 'id': 'eq.$userId'},
+      );
+
+      if (response.data == null || response.data is! List) {
+        return [];
+      }
+      return (response.data as List)
+          .map((json) => AppUser.fromJson(json))
+          .whereType<AppUser>()
+          .toList();
+    } catch (e) {
+      debugPrint('❌ Error fetching user: $e');
+      rethrow;
+    }
+  }
+
+  // 로그아웃
+  Future<void> logOut() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      // 1️⃣ Supabase 로그아웃
+      await supabase.auth.signOut();
+
+      // 2️⃣ Google 로그아웃
+      final googleSignIn = GoogleSignIn.instance;
+
+      // 계정이 연결되어 있을 경우만 disconnect
+      await googleSignIn.disconnect(); // 완전 로그아웃
+
+      // 안전하게 signOut() 호출
+      await googleSignIn.signOut();
+
+      userId = null;
+      userEmail = null;
+    } catch (error) {
+      debugPrint("로그아웃 실패: $error");
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+}
