@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="middleproject_animind_pawong"
+        android:label="ANIMIND"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

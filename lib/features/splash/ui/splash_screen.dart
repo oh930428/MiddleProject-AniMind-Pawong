@@ -91,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
 
                 const Text(
-                  "Animind",
+                  "ANIMIND",
                   style: TextStyle(
                     color: Color(0xFF263938),
                     fontSize: 18,

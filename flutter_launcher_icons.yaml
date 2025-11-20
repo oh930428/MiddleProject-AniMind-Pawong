@@ -1,0 +1,20 @@
+flutter_launcher_icons:
+  image_path: "assets/images/logo.png"   # 아이콘 경로 (실제 있는 파일만!)
+
+  android: true        # 안드로이드 아이콘 생성
+  min_sdk_android: 21  # SDK 최소 버전 유지
+
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logo.png"
+  adaptive_icon_foreground_inset: 8
+
+  ios: false           # iOS는 안 만들면 false (혹은 삭제해도 OK)
+
+  web:
+    generate: false    # web 아이콘 생성 X
+
+  windows:
+    generate: false    # 안 쓰므로 비활성화
+
+  macos:
+    generate: false    # 안 쓰므로 비활성화

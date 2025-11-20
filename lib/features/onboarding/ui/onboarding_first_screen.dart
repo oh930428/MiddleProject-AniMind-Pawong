@@ -17,7 +17,7 @@ class OnboardingFirstScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          "Animind 앱 소개",
+          "ANIMIND 앱 소개",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
